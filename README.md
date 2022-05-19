@@ -46,3 +46,6 @@ npm test
 npm run serve
 ```
 - Local:   http://localhost:8080/
+
+## SAMPLE
+![alt text](https://github.com/makecumulonimbus/movie-memories/blob/main/src/assets/sample%20picture/screencapture-movie-memorie1.png?raw=true)
