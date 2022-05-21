@@ -194,6 +194,7 @@
                 :max-rating="10"
                 :star-size="30"
                 text-class="custom-text"
+                clearable
               />
             </b-form-group>
           </div>

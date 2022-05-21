@@ -29,7 +29,7 @@
           <i class="fas fa-film" v-if="filterMode == 'genre'"/>
           <i class="fas fa-user" v-if="filterMode == 'director'"/>
           <i class="fas fa-users" v-if="filterMode == 'actor'"/>
-
+          <i class="fas fa-search" v-if="filterMode == 'search'"/>
           {{filterMode}} : {{filterValue ? filterValue : '-'}}
           </div>
           <div class="btn-addData">
@@ -336,7 +336,11 @@ export default {
     },
     filterData(data) {
       this.statusMovie = 'all'
-      this.search = ""
+      if(data.mode == 'search'){
+        this.search = data.value
+      }else{
+          this.search = ''
+      }
       this.filterMode = data.mode
       this.filterValue = data.value
       this.loadMovies();
@@ -385,8 +389,13 @@ export default {
       const movieRef = firebaseApp.firestore().collection("movie");
       return movieRef
         .add(data)
-        .then(() => {
-          this.loadMovies();
+        .then((res) => {
+          this.movieList.splice(-1)
+          data.id = res.id
+          this.movieList.unshift(data)
+          this.totalDatas = this.totalDatas + 1
+          this.loading = false;
+
           this.notifyAlert("success", "Add movie");
         })
         .catch((err) => {
@@ -402,7 +411,15 @@ export default {
       return movieRef
         .update(data)
         .then(() => {
-          this.loadMovies();
+          
+          if(this.statusMovie != 'all' & this.filterMode != ''){
+             this.loadMovies();
+          }else{
+            data.id = id
+            this.movieList = this.movieList.map(u => u.id !== data.id ? u : data);
+            this.loading = false;
+          }
+
           this.notifyAlert("success", "Edit movie");
         })
         .catch((err) => {

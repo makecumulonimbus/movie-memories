@@ -24,7 +24,7 @@
           <i class="fas fa-calendar" v-if="filterMode == 'year'"/>
           <i class="fas fa-building" v-if="filterMode == 'studio'"/>
           <i class="fas fa-film" v-if="filterMode == 'genre'"/>
-  
+          <i class="fas fa-search" v-if="filterMode == 'search'"/>
           {{filterMode}} : {{filterValue ? filterValue : '-'}}
           </div>
           <div class="btn-addData">
@@ -332,8 +332,12 @@ export default {
       const animeRef = firebaseApp.firestore().collection("anime");
       return animeRef
         .add(data)
-        .then(() => {
-          this.loadAnimes();
+        .then((res) => {
+          this.animeList.splice(-1)
+          data.id = res.id
+          this.animeList.unshift(data)
+          this.totalDatas = this.totalDatas + 1
+          this.loading = false;
           this.notifyAlert("success", "Add anime");
         })
         .catch((err) => {
@@ -349,7 +353,15 @@ export default {
       return animeRef
         .update(data)
         .then(() => {
-          this.loadAnimes();
+          
+          if(this.statusAnime != 'all' & this.filterMode != ''){
+             this.loadAnimes();
+          }else{
+            data.id = id
+            this.animeList = this.animeList.map(u => u.id !== data.id ? u : data);
+            this.loading = false;
+          }
+
           this.notifyAlert("success", "Edit anime");
         })
         .catch((err) => {

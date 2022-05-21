@@ -92,7 +92,7 @@
         </div>
       </div>
     </div>
-    <FilterModal @toggleModal="toggleModal" @submit="submit" :form="form" @clearFilter="clearFilter"/>
+    <FilterModal @toggleModal="toggleModal" @submit="submit" :form="form"  @clearFilter="clearFilter"/>
   </div>
 </template>
 
@@ -109,6 +109,7 @@ export default {
       statusActive: "all",
       search: "",
       form: {
+        searchValue : "",
         filterMode: "",
         mode: [
           { value: "", text: "" },
@@ -118,6 +119,8 @@ export default {
           { value: "studio", text: "Studio" },
           { value: "director", text: "Director" },
           { value: "actor", text: "Actor" },
+          { value: "search", text: "Search" },
+
         ],
         filterData: "",
         ratingSelect: "",
@@ -172,25 +175,29 @@ export default {
       this.$bvModal.hide("modal-filter");
     },
     submit() {
-      if (this.form.filterMode == "genre") {
-        this.form.filterData = this.form.genreSelect;
-      } else if (this.form.filterMode == "year") {
-        this.form.filterData = this.form.yearSelected;
-      } else if (this.form.filterMode == "rating") {
-        this.form.filterData = parseInt(this.form.ratingSelect);
-      } else if (this.form.filterMode == "studio") {
-        this.form.filterData = this.form.studioSelect;
-      } else if (this.form.filterMode == "director") {
-        this.form.filterData = this.form.directorSelect;
-      } else if (this.form.filterMode == "actor") {
-        this.form.filterData = this.form.actorSelect;
-      }else {
-        this.form.filterData = '';
-      }
-
+    
+        if (this.form.filterMode == "genre") {
+          this.form.filterData = this.form.genreSelect;
+        } else if (this.form.filterMode == "year") {
+          this.form.filterData = this.form.yearSelected;
+        } else if (this.form.filterMode == "rating") {
+          this.form.filterData = parseInt(this.form.ratingSelect);
+        } else if (this.form.filterMode == "studio") {
+          this.form.filterData = this.form.studioSelect;
+        } else if (this.form.filterMode == "director") {
+          this.form.filterData = this.form.directorSelect;
+        } else if (this.form.filterMode == "actor") {
+          this.form.filterData = this.form.actorSelect;
+        }else if(this.form.filterMode == "search"){
+          this.form.filterData = this.form.searchValue;
+        }else {
+          this.form.filterData = '';
+        }
+      
+      
       var filter = {
         mode : this.form.filterMode,
-        value : this.form.filterData
+        value : this.form.filterData,
       }
 
       this.$emit("filterData", filter);
@@ -200,6 +207,7 @@ export default {
       this.$emit("searchValue", this.search.trim().toLowerCase());
     },
     clearFilter(){
+      this.form.searchValue = ''
       this.form.filterMode = ''
       this.form.filterData = ''
       
