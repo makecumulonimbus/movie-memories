@@ -26,7 +26,7 @@
           <i class="fas fa-film" v-if="filterMode == 'genre'"/>
           <i class="fas fa-user" v-if="filterMode == 'director'"/>
           <i class="fas fa-users" v-if="filterMode == 'actor'"/>
-          
+          <i class="fas fa-search" v-if="filterMode == 'search'"/>
           {{filterMode}} : {{filterValue ? filterValue : '-'}}</div>
           <div class="btn-addData">
             <b-button @click="addItemModal" id="add" class="btn-confirm"
@@ -340,8 +340,12 @@ export default {
       const seriesRef = firebaseApp.firestore().collection("series");
       return seriesRef
         .add(data)
-        .then(() => {
-          this.loadSeries();
+        .then((res) => {
+          this.seriesList.splice(-1)
+          data.id = res.id
+          this.seriesList.unshift(data)
+          this.totalDatas = this.totalDatas + 1
+          this.loading = false;
           this.notifyAlert("success", "Add series");
         })
         .catch((err) => {
@@ -357,7 +361,15 @@ export default {
       return seriesRef
         .update(data)
         .then(() => {
-          this.loadSeries();
+
+          if(this.statusSeries != 'all' & this.filterMode != ''){
+             this.loadSeries();
+          }else{
+            data.id = id
+            this.seriesList = this.seriesList.map(u => u.id !== data.id ? u : data);
+            this.loading = false;
+          }
+
           this.notifyAlert("success", "Edit series");
         })
         .catch((err) => {

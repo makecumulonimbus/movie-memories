@@ -95,8 +95,18 @@
               ></b-form-select>
             </b-form-group>
 
+             <b-form-group label="Search :" class="" v-if="form.filterMode == 'search'">
+              <b-form-input
+                id="searchValue"
+                placeholder="Search..."
+                size="sm"
+                v-model="form.searchValue"
+                autocomplete="off"
+              ></b-form-input>
+            </b-form-group>
           </div>
-          
+
+
         </div>
         <div class="btn-save">
           <b-button type="submit" class="btn-confirm"
