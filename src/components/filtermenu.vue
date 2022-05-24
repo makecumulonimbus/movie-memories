@@ -189,11 +189,10 @@ export default {
         } else if (this.form.filterMode == "actor") {
           this.form.filterData = this.form.actorSelect;
         }else if(this.form.filterMode == "search"){
-          this.form.filterData = this.form.searchValue;
+          this.form.filterData = this.form.searchValue.trim().toLowerCase();
         }else {
           this.form.filterData = '';
         }
-      
       
       var filter = {
         mode : this.form.filterMode,

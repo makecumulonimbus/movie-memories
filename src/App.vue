@@ -24,6 +24,6 @@ export default {
 @font-face {
   font-family: "Sansation";
   src: local("Sansation"),
-   url(./assets/font/Sansation Bold.ttf) format("truetype");
+   url(./assets/font/Sansation%20Bold.ttf) format("truetype");
 }
 </style>

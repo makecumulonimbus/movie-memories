@@ -366,6 +366,7 @@ export default {
              this.loadSeries();
           }else{
             data.id = id
+            data.createAt = this.seriesSelect.createAt
             this.seriesList = this.seriesList.map(u => u.id !== data.id ? u : data);
             this.loading = false;
           }

@@ -411,11 +411,11 @@ export default {
       return movieRef
         .update(data)
         .then(() => {
-          
           if(this.statusMovie != 'all' & this.filterMode != ''){
              this.loadMovies();
           }else{
             data.id = id
+            data.createAt = this.movieSelect.createAt
             this.movieList = this.movieList.map(u => u.id !== data.id ? u : data);
             this.loading = false;
           }

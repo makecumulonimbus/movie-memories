@@ -358,6 +358,7 @@ export default {
              this.loadAnimes();
           }else{
             data.id = id
+            data.createAt = this.animeSelect.createAt
             this.animeList = this.animeList.map(u => u.id !== data.id ? u : data);
             this.loading = false;
           }
