@@ -29,12 +29,12 @@
         class="image-poster"
         loading="lazy"
         @click="toDetailPage"
-        :src="datas.imageURL ? datas.imageURL : require('@/assets/NoImage.png')"
+        :src="datas.image ? datas.image : require('@/assets/NoImage.png')"
         :alt="datas.title"
       />
       <div class="title">
         <p>
-          {{ datas.name }}
+          {{ this.capitalText(datas.name) }}
         </p>
       </div>
     </div>
@@ -59,6 +59,9 @@ export default {
         return "bg-advanced";
       }
     },
+    capitalText(text) {
+      return text[0].toUpperCase() + text.slice(1);
+    },
     editData() {
       this.$emit("editData", this.datas);
     },
@@ -74,7 +77,7 @@ export default {
 
 <style scoped>
 .card-item {
-  margin: 0.5rem 0rem;
+  margin: 0.6rem 0rem;
 }
 .item {
   border-radius: 10px !important;
@@ -143,6 +146,7 @@ img {
 .image-poster {
   border-radius: 10px;
   width: 100%;
+  min-height: 260px;
   height: calc(100% - 45px);
   object-fit: cover;
 }

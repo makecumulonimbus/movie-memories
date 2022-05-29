@@ -41,7 +41,7 @@
       />
       <div class="title">
         <p>
-          {{ datas.title }} {{ datas.sequel ? datas.sequel : "" }}
+          {{ this.capitalText(datas.title) }} {{ datas.sequel ? datas.sequel : "" }}
           {{ datas.season ? "SS" + datas.season : "" }}
           {{ datas.year ? "(" + datas.year + ")" : "" }}
         </p>
@@ -68,6 +68,9 @@ export default {
         return "bg-advanced";
       }
     },
+    capitalText(text) {
+      return text[0].toUpperCase() + text.slice(1);
+    },
     editData() {
       this.$emit("editData", this.datas);
     },
@@ -83,7 +86,7 @@ export default {
 
 <style scoped>
 .card-item {
-  margin: 0.5rem 0rem;
+  margin: 0.6rem 0rem;
 }
 .item {
   border-radius: 10px !important;
@@ -154,6 +157,7 @@ img {
   cursor: pointer;
   border-radius: 10px;
   width: 100%;
+  min-height: 260px;
   height: calc(100% - 45px);
   object-fit: cover;
 }

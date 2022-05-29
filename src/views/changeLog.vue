@@ -6,8 +6,17 @@
 
     <div class="row">
       <div class="col-lg-8 text-left">
+      <div class="log-ver mt-4 mb-4">
+          <h4 class="current-ver">Version 2.0.1</h4>
+          <div>- ลบกราฟ genre และ rating ออกจาก dashboard</div>
+          <div>- เพิ่ม function สำหรับเพิ่ม ลบ แก้ไขข้อมูลของ dashboard</div>
+          <div>- ปรับขนาด margin ของ card ให้มีความสวยงาม และ responsive มากขึ้น</div>
+          <div>- เปลี่ยนเมนู-ไอคอน Manage เป็น Favorite</div>
+          <div>- แก้การแสดงผลชื่อให้ตัวแรกเป็นตัวใหญ่</div>
+          <div>- เพิ่มความสูงขั้นต่ำของรูปโปสเตอร์</div>
+        </div>
         <div class="log-ver mt-4 mb-4">
-          <h4 class="current-ver">Version 2.0.0</h4>
+          <h4 class="">Version 2.0.0</h4>
           <div>- ปรับ UI ต่างๆ ทั้งหมดภายในเว็บ และเปลี่ยนสีเว็บเป็นแบบ gradient</div>
           <div>- เปลี่ยนฟอนต์ที่ใช้เป็น Sansation</div>
           <div>- เปลี่ยนหน้ารายละเอียดให้เป็นหน้าต่าง Modal เมื่อคลิก</div>

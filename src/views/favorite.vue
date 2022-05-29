@@ -86,17 +86,17 @@
         </div>
       </div>
       <div class="btn-addDataManage search-container">
-        <b-form @submit.prevent="searchValue">
+        <b-form @submit.prevent="searchData">
           <b-input-group>
             <b-form-input
               id="search"
-              v-model="search"
+              v-model="searchValue"
               placeholder="Search..."
               size="sm"
               autocomplete="off"
             ></b-form-input>
             <b-input-group-append>
-              <b-button class="btn-search" size="sm" @click="searchValue"
+              <b-button class="btn-search" size="sm" @click="searchData"
                 ><i class="fas fa-search"
               /></b-button>
             </b-input-group-append>
@@ -204,6 +204,7 @@
                   required
                   placeholder="Enter name"
                   size="sm"
+                  autocomplete="off"
                 ></b-form-input>
               </b-form-group>
             </div>
@@ -215,6 +216,7 @@
                   placeholder="Enter imageURL"
                   min="0"
                   size="sm"
+                  autocomplete="off"
                 ></b-form-input>
               </b-form-group>
             </div>
@@ -229,7 +231,7 @@
       </template>
     </b-modal>
 
-    <ModalDelete :headName="this.tabActive" :imageURL="this.dataSelect.imageURL" @toggleModal="toggleModal" @deleteData="deleteData"/>
+    <ModalDelete :headName="this.tabActive" :imageURL="this.dataSelect.image" @toggleModal="toggleModal" @deleteData="deleteData"/>
   </div>
 </template>
 
@@ -240,14 +242,16 @@ import LoadingData from "../components/loadingData.vue";
 import Pagination from "../components/pagination.vue";
 import firebaseApp from "../firebase/firebase_app";
 import ModalDelete from '../components/modal-delete.vue'
+import updateDashboard from "../firebase/firebase_function.js"
 
 export default {
-  name: "Manage",
+  name: "Advanced",
   data() {
     return {
       windowWidth: window.innerWidth,
       tabActive: "director",
       search: "",
+      searchValue : "",
       dataSelect: {},
       totalDatas: null,
       itemPerPage: 30,
@@ -281,7 +285,7 @@ export default {
     tabsActive(tab) {
       if (this.tabActive != tab) {
         this.tabActive = tab;
-         this.$router.replace("/manage/" + tab);
+        this.$router.replace("/favorite/" + tab);
         this.loadData(tab);
       }
     },
@@ -328,8 +332,8 @@ export default {
               querySnapshot.forEach((doc) => {
                 const dataElement = {
                   id: doc.id,
-                  name: this.capitalText(doc.data().name),
-                  imageURL: doc.data().image,
+                  name: doc.data().name,
+                  image: doc.data().image,
                 };
                 datalist.push(dataElement);
               });
@@ -351,15 +355,12 @@ export default {
           console.log(err);
         });
     },
-    searchValue() {
-      this.search = this.search.trim().toLowerCase();
+    searchData() {
+      this.search = this.searchValue.trim().toLowerCase();
       this.loadData(this.tabActive);
     },
     loadMore() {
       this.loadData(this.tabActive);
-    },
-    capitalText(text) {
-      return text[0].toUpperCase() + text.slice(1);
     },
     toggleModal() {
       this.$bvModal.hide("modal-data");
@@ -386,8 +387,16 @@ export default {
       const dataRef = firebaseApp.firestore().collection(this.tabActive);
       return dataRef
         .add(data)
-        .then(() => {
-          this.loadData(this.tabActive);
+        .then((res) => {
+          if(this.datas.length >= 30){
+            this.datas.splice(-1)
+          }
+          data.id = res.id
+          this.datas.unshift(data)
+          this.totalDatas = this.totalDatas + 1
+          this.loading = false;
+          
+          updateDashboard.addFavoriteData(this.tabActive)
           this.notifyAlert("success", "Add " + this.tabActive);
         })
         .catch((err) => {
@@ -403,7 +412,11 @@ export default {
       return dataRef
         .update(data)
         .then(() => {
-          this.loadData(this.tabActive);
+          data.id = id
+          this.datas = this.datas.map(u => u.id !== data.id ? u : data);
+          console.log(this.datas);
+          this.loading = false;
+
           this.notifyAlert("success", "Edit " + this.tabActive);
         })
         .catch((err) => {
@@ -428,6 +441,7 @@ export default {
       return dataRef
         .delete()
         .then(() => {
+          updateDashboard.deleteFavoriteData(this.tabActive)
           this.loadData(this.tabActive);
           this.notifyAlert("success", "Delete " + this.tabActive);
         })
@@ -447,7 +461,7 @@ export default {
       this.dataSelect = data;
       this.form = {
         name: this.dataSelect.name,
-        imageURL: this.dataSelect.imageURL,
+        imageURL: this.dataSelect.image,
       };
       this.$bvModal.show("modal-data");
     },

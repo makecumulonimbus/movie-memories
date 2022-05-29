@@ -102,6 +102,7 @@ import "../assets/scss/style.scss";
 import ModalDelete from "../components/modal-delete.vue";
 import ModalAddEdit from "../components/modal-add-edit.vue";
 import DetailModal from "../components/detailModal.vue";
+import updateDashboard from "../firebase/firebase_function.js"
 
 export default {
   name: "MoviePage",
@@ -147,6 +148,7 @@ export default {
     });
   },
   created() {
+   
     // this.loadGenre();
     // this.loadStudio();
     this.loadMovies();
@@ -253,7 +255,7 @@ export default {
               querySnapshot.forEach((doc) => {
                 const dataElement = {
                   id: doc.id,
-                  title: this.capitalText(doc.data().title),
+                  title: doc.data().title,
                   sequel: doc.data().sequel,
                   year: doc.data().year,
                   genre: doc.data().genre,
@@ -289,9 +291,7 @@ export default {
       // this.currentPage = page;
       this.loadMovies();
     },
-    capitalText(text) {
-      return text[0].toUpperCase() + text.slice(1);
-    },
+
     addItemModal() {
       this.formMode = "Add";
       this.form = {
@@ -390,12 +390,15 @@ export default {
       return movieRef
         .add(data)
         .then((res) => {
-          this.movieList.splice(-1)
+          if(this.movieList.length >= 30){
+             this.movieList.splice(-1)
+          }
           data.id = res.id
           this.movieList.unshift(data)
           this.totalDatas = this.totalDatas + 1
           this.loading = false;
 
+          updateDashboard.addMainData(data,'movie')
           this.notifyAlert("success", "Add movie");
         })
         .catch((err) => {
@@ -420,6 +423,7 @@ export default {
             this.loading = false;
           }
 
+          updateDashboard.editMainData(this.movieSelect,data,'movie')
           this.notifyAlert("success", "Edit movie");
         })
         .catch((err) => {
@@ -436,6 +440,7 @@ export default {
       return movieRef
         .delete()
         .then(() => {
+          updateDashboard.deleteMainData(this.movieSelect,'movie')
           this.loadMovies();
           this.notifyAlert("success", "Delete movie");
         })

@@ -174,14 +174,6 @@
       </div>
     </div>
 
-    <div class="row bar-chart mb-3">
-      <div class="chart col-sm-12 col-md-6">
-        <bar-chart :data="dataGenre" label-rotate rainbow x-name="Genre" :colors="dataGenre[0].genreColors"/>
-      </div>
-      <div class="chart col-sm-12 col-md-6">
-        <bar-chart :data="dataRating" label-rotate horizontal rainbow y-name="Rating" :colors="dataRating[0].ratingColors"/>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -205,26 +197,18 @@ export default {
       allStatusCount : {
         watched: 0,
         wanted: 0,
-        rating : [],
-        genre : []
       },
       movieStatusCount: {
         watched: 0,
         wanted: 0,
-        rating : [],
-         genre : []
       },
       seriesStatusCount: {
         watched: 0,
         wanted: 0,
-        rating : [],
-         genre : []
       },
       animeStatusCount: {
         watched: 0,
         wanted: 0,
-        rating : [],
-         genre : []
       },
       advanceData : {
         actors : 0,
@@ -232,31 +216,6 @@ export default {
         studio : 0,
         genre : 0
       },
-      dataRating: [
-        {
-          name: "Rating",
-          data: [
-            { label: "1", value: 0 },
-            { label: "2", value: 0 },
-            { label: "3", value: 0 },
-            { label: "4", value: 0 },
-            { label: "5", value: 0 },
-            { label: "6", value: 0 },
-            { label: "7", value: 0 },
-            { label: "8", value: 0 },
-            { label: "9", value: 0 },
-            { label: "10", value: 0 },
-          ],
-          ratingColors : ["#d3ff4e ","#82ff4f","#4fffef","#4eadff","#4f6dff","#c34fff","#ff4fe1","#ff574f","#ff984f","#fffa4f"]
-        },
-      ],
-      dataGenre: [
-        {
-          name: "Genre",
-          data: [],
-          genreColors : ["#152d79","#fb9805","#fed4eb","#00ab4c","#b6134a","#9B59B6","#58D68D","#F7DC6F","#85C1E9","#7F8C8D","#DE3163","#40E0D0"]
-        },
-      ],
       dataPie: [
         {
           name: "Movie",
@@ -275,7 +234,6 @@ export default {
     };
   },
   created() {
-    this.loadGenre();
     this.loadStaticData()
   },
   mounted() {
@@ -298,42 +256,22 @@ export default {
             var statusWanted = this.staticData.movie.movie_wanted + this.staticData.series.series_wanted + this.staticData.anime.anime_wanted
             this.showStatus.watched = statusWatched
             this.showStatus.wanted = statusWanted
-            var movieRating = this.staticData.movie.rating
-            var seriesRating = this.staticData.series.rating
-            var animeRating = this.staticData.anime.rating
 
             //all
             this.allStatusCount.watched = statusWatched
             this.allStatusCount.wanted = statusWanted
-            var sumRating = movieRating.map((ele,index) =>{
-              var valueData = ele + seriesRating[index] + animeRating[index]
-              return {"label" : (index + 1).toString() ,"value" : valueData }
-            })
-            this.allStatusCount.rating = sumRating
 
             //movie
             this.movieStatusCount.watched = this.staticData.movie.movie_watched
             this.movieStatusCount.wanted =  this.staticData.movie.movie_wanted
-            var sumMovie = movieRating.map((ele,index) =>{
-              return {"label" : (index + 1).toString() ,"value" : ele }
-            })
-            this.movieStatusCount.rating = sumMovie
 
             //series
             this.seriesStatusCount.watched = this.staticData.series.series_watched
             this.seriesStatusCount.wanted = this.staticData.series.series_wanted
-             var sumSeries = seriesRating.map((ele,index) =>{
-              return {"label" : (index + 1).toString() ,"value" : ele }
-            })
-            this.seriesStatusCount.rating = sumSeries
 
             //anime
             this.animeStatusCount.watched = this.staticData.anime.anime_watched
             this.animeStatusCount.wanted = this.staticData.anime.anime_wanted
-             var sumAnime = animeRating.map((ele,index) =>{
-              return {"label" : (index + 1).toString() ,"value" : ele }
-            })
-            this.animeStatusCount.rating = sumAnime
 
             //advance
             this.advanceData.actors = this.staticData.advance.actors
@@ -343,7 +281,6 @@ export default {
 
             //piechart
             this.piechartData()
-            this.ratingchartData()
         })
         .catch((err) => {
           this.loading = false;
@@ -356,80 +293,31 @@ export default {
       if(this.statusActive == 'movie'){
         this.showStatus.watched = this.movieStatusCount.watched
         this.showStatus.wanted = this.movieStatusCount.wanted
-        this.dataRating[0].data = this.movieStatusCount.rating
-        this.dataGenre[0].data = this.movieStatusCount.genre
       }else if (this.statusActive == 'series'){
         this.showStatus.watched = this.seriesStatusCount.watched
         this.showStatus.wanted = this.seriesStatusCount.wanted
-        this.dataRating[0].data = this.seriesStatusCount.rating
-        this.dataGenre[0].data = this.seriesStatusCount.genre
       }else if (this.statusActive == 'anime'){
         this.showStatus.watched = this.animeStatusCount.watched
         this.showStatus.wanted = this.animeStatusCount.wanted
-        this.dataRating[0].data = this.animeStatusCount.rating
-        this.dataGenre[0].data = this.animeStatusCount.genre
       }else{
         this.showStatus.watched = this.allStatusCount.watched 
         this.showStatus.wanted = this.allStatusCount.wanted
-        this.dataRating[0].data = this.allStatusCount.rating
-        this.dataGenre[0].data = this.allStatusCount.genre
       }
     },
     piechartData(){
       this.dataPie.map((data) =>{
         if(data.name == 'Movie'){
-            return data.value = this.movieStatusCount.watched+this.movieStatusCount.wanted
+            return data.value = this.movieStatusCount.watched + this.movieStatusCount.wanted
         }else if(data.name == 'Series'){
-            return data.value = this.seriesStatusCount.watched+this.seriesStatusCount.wanted
+            return data.value = this.seriesStatusCount.watched + this.seriesStatusCount.wanted
         }
         else if(data.name == 'Anime'){
-            return data.value = this.animeStatusCount.watched+this.animeStatusCount.wanted
+            return data.value = this.animeStatusCount.watched + this.animeStatusCount.wanted
         }
       })
       this.loadingPieChart = false
     },
-    ratingchartData(){
-      this.dataRating[0].data = this.allStatusCount.rating
-    },
 
-    loadGenre() {
-      const genreRef = firebaseApp.firestore().collection("genre");
-      return genreRef.get().then((document) => {
-        var newGenre = [];
-        var genreMovie = []
-        var genreSeries = []
-        var genreAnime = []
-        document.forEach((doc) => {
-          const genreName = doc.data().name
-          // var countGenre = 0
-           var elementData = {
-              label: genreName,
-              value: doc.data().value.movie + doc.data().value.series + doc.data().value.anime,
-            };
-            var elementMovie = {
-              label: genreName,
-              value: doc.data().value.movie
-            }
-            var elementSeries = {
-              label: genreName,
-              value: doc.data().value.series
-            }
-            var elementAnime = {
-              label: genreName,
-              value: doc.data().value.anime
-            }
-          newGenre.push(elementData);
-          genreMovie.push(elementMovie)
-          genreSeries.push(elementSeries)
-          genreAnime.push(elementAnime)
-        });
-        this.dataGenre[0].data = newGenre;
-        this.allStatusCount.genre = newGenre
-        this.movieStatusCount.genre = genreMovie
-        this.seriesStatusCount.genre = genreSeries
-        this.animeStatusCount.genre = genreAnime
-      });
-    },
   },
 };
 </script>
@@ -453,7 +341,7 @@ export default {
 .bg-advance {
   padding: 20px;
   border-radius: 10px;
-  background: linear-gradient(62.6deg, #94f5ff 0%, #ff79cf 100%)
+  background: linear-gradient(62.6deg, #efff69 0%, #ff76f4 100%)
 }
 .countStatusNumber {
   font-size: 25px;
@@ -474,7 +362,7 @@ export default {
   color: black;
 }
 .status-count {
-  margin-top: 15px;
+  margin: 15px 0;
 }
 .title-dashboard {
   text-align: left;

@@ -97,6 +97,7 @@ import "../assets/scss/style.scss";
 import ModalDelete from "../components/modal-delete.vue";
 import ModalAddEdit from "../components/modal-add-edit.vue";
 import DetailModal from "../components/detailModal.vue";
+import updateDashboard from "../firebase/firebase_function.js"
 
 export default {
   name: "AnimePage",
@@ -205,7 +206,7 @@ export default {
               querySnapshot.forEach((doc) => {
                 const dataElement = {
                   id: doc.id,
-                  title: this.capitalText(doc.data().title),
+                  title: doc.data().title,
                   season: doc.data().season,
                   episode: doc.data().episode,
                   year: doc.data().year,
@@ -239,9 +240,6 @@ export default {
       this.$store.dispatch("changePage", page);
       // this.currentPage = page;
       this.loadAnimes();
-    },
-    capitalText(text) {
-      return text[0].toUpperCase() + text.slice(1);
     },
     addItemModal() {
       this.formMode = "Add";
@@ -333,11 +331,15 @@ export default {
       return animeRef
         .add(data)
         .then((res) => {
-          this.animeList.splice(-1)
+          if(this.animeList.length >= 30){
+            this.animeList.splice(-1)
+          }
           data.id = res.id
           this.animeList.unshift(data)
           this.totalDatas = this.totalDatas + 1
           this.loading = false;
+
+          updateDashboard.addMainData(data,'anime')
           this.notifyAlert("success", "Add anime");
         })
         .catch((err) => {
@@ -362,7 +364,8 @@ export default {
             this.animeList = this.animeList.map(u => u.id !== data.id ? u : data);
             this.loading = false;
           }
-
+          
+          updateDashboard.editMainData(this.animeSelect,data,'anime')
           this.notifyAlert("success", "Edit anime");
         })
         .catch((err) => {
@@ -379,6 +382,7 @@ export default {
       return animeRef
         .delete()
         .then(() => {
+          updateDashboard.deleteMainData(this.animeSelect,'anime')
           this.loadAnimes();
           this.notifyAlert("success", "Delete anime");
         })

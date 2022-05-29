@@ -89,6 +89,7 @@ import "../assets/scss/style.scss";
 import ModalDelete from '../components/modal-delete.vue'
 import ModalAddEdit from '../components/modal-add-edit.vue'
 import DetailModal from '../components/detailModal.vue'
+import updateDashboard from "../firebase/firebase_function.js"
 
 export default {
   name: "SeriesPage",
@@ -202,7 +203,7 @@ export default {
               querySnapshot.forEach((doc) => {
                 const dataElement = {
                   id: doc.id,
-                  title: this.capitalText(doc.data().title),
+                  title: doc.data().title,
                   season: doc.data().season,
                   episode: doc.data().episode,
                   year: doc.data().year,
@@ -238,9 +239,6 @@ export default {
       this.$store.dispatch("changePage", page);
       // this.currentPage = page;
       this.loadSeries();
-    },
-    capitalText(text) {
-      return text[0].toUpperCase() + text.slice(1);
     },
     addItemModal() {
       this.formMode = "Add";
@@ -341,11 +339,15 @@ export default {
       return seriesRef
         .add(data)
         .then((res) => {
-          this.seriesList.splice(-1)
+          if(this.seriesList.length >= 30){
+            this.seriesList.splice(-1)
+          }
           data.id = res.id
           this.seriesList.unshift(data)
           this.totalDatas = this.totalDatas + 1
           this.loading = false;
+
+          updateDashboard.addMainData(data,'series')
           this.notifyAlert("success", "Add series");
         })
         .catch((err) => {
@@ -371,6 +373,7 @@ export default {
             this.loading = false;
           }
 
+          updateDashboard.editMainData(this.seriesSelect,data,'series')
           this.notifyAlert("success", "Edit series");
         })
         .catch((err) => {
@@ -387,6 +390,7 @@ export default {
       return seriesRef
         .delete()
         .then(() => {
+          updateDashboard.deleteMainData(this.seriesSelect,'series')
           this.loadSeries();
           this.notifyAlert("success", "Delete series");
         })

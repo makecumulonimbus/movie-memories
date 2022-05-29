@@ -74,13 +74,13 @@
                 </div>
                 <div
                   class="p-2 advanced list-menu"
-                  @click="changePath('/manage/director')"
+                  @click="changePath('/favorite/director')"
                   v-bind:class="{
-                    active: $route.name == 'Manage',
-                    'none-active': $route.name != 'Manage',
+                    active: $route.name == 'Favorite',
+                    'none-active': $route.name != 'Favorite',
                   }"
                 >
-                   <i class="fas fa-tasks" /><span class="pl-2">Manage</span>
+                   <i class="fas fa-bookmark" /><span class="pl-2">Favorite</span>
                 </div>
 
                 <div
@@ -175,9 +175,9 @@
                 <i class="fas fa-chart-bar" />
                 <span>Dashboard</span></b-dropdown-item
               >
-              <b-dropdown-item to="/manage/director">
-                <i class="fas fa-tasks" />
-                <span>Manage</span></b-dropdown-item
+              <b-dropdown-item to="/favorite/director">
+                <i class="fas fa-bookmark" />
+                <span>Favorite</span></b-dropdown-item
               >
               <b-dropdown-item to="/changelog">
                 <i class="fas fa-info-circle" />
