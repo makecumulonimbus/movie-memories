@@ -6,7 +6,8 @@
 </template>
 
 <script>
-import Navbar from "../components/navbar.vue";
+import Navbar from "@/components/navbar";
+
 export default {
   name: "main",
   components: {
@@ -14,6 +15,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

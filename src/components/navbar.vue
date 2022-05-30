@@ -74,13 +74,13 @@
                 </div>
                 <div
                   class="p-2 advanced list-menu"
-                  @click="changePath('/manage/director')"
+                  @click="changePath('/favorite/director')"
                   v-bind:class="{
-                    active: $route.name == 'Manage',
-                    'none-active': $route.name != 'Manage',
+                    active: $route.name == 'Favorite',
+                    'none-active': $route.name != 'Favorite',
                   }"
                 >
-                   <i class="fas fa-tasks" /><span class="pl-2">Manage</span>
+                  <i class="fas fa-bookmark" /><span class="pl-2">Favorite</span>
                 </div>
 
                 <div
@@ -95,23 +95,13 @@
                 </div>
               </div>
             </b-collapse>
-           
           </div>
           <template #footer>
-             <div class="img-sidebar-menu text-center mb-3">
-               <img src="../assets/sidebar_undrow.svg" width="120px"/>
+            <div class="img-sidebar-menu text-center mb-3">
+              <img src="../assets/sidebar_undrow.svg" width="120px" />
             </div>
             <div
-              class="
-                bg-dark
-                text-light
-                align-items-center
-                px-3
-                py-2
-                text-center
-                pointer
-                menu-footer
-              "
+              class="bg-dark text-light align-items-center px-3 py-2 text-center pointer menu-footer"
               @click="openModal"
             >
               <i class="fas fa-sign-out-alt" />
@@ -175,9 +165,9 @@
                 <i class="fas fa-chart-bar" />
                 <span>Dashboard</span></b-dropdown-item
               >
-              <b-dropdown-item to="/manage/director">
-                <i class="fas fa-tasks" />
-                <span>Manage</span></b-dropdown-item
+              <b-dropdown-item to="/favorite/director">
+                <i class="fas fa-bookmark" />
+                <span>Favorite</span></b-dropdown-item
               >
               <b-dropdown-item to="/changelog">
                 <i class="fas fa-info-circle" />
@@ -194,12 +184,8 @@
 
       <b-modal id="modal-exit" title="LOGOUT" hide-footer>
         <template #modal-header>
-          <span class="modal-header-text"
-            ><i class="fas fa-sign-out-alt" /> LOGOUT</span
-          >
-          <span class="close-icon" @click="toggleModal"
-            ><i class="fas fa-times" />
-          </span>
+          <span class="modal-header-text"><i class="fas fa-sign-out-alt" /> LOGOUT</span>
+          <span class="close-icon" @click="toggleModal"><i class="fas fa-times" /> </span>
         </template>
         <template>
           <div class="text-center">
@@ -219,9 +205,9 @@
 </template>
 
 <script>
-import firebaseApp from "../firebase/firebase_app";
-import "../assets/scss/style.scss";
-import LoadingComponent from "../components/loading.vue";
+import "@/assets/scss/style.scss";
+import firebaseApp from "@/firebase/firebase_app";
+import LoadingComponent from "@/components/loading";
 
 export default {
   name: "Navbar",
@@ -269,15 +255,38 @@ export default {
           .signOut()
           .then(() => {
             this.loading = false;
+            this.notifyAlert("success", "Logout");
             this.$router.replace("login");
-          });
+          }).catch(err=>{
+            console.log(err);
+            this.notifyAlert("error", "Logout unsuccess");
+          })
       }, 1000);
+    },
+    notifyAlert(type, text) {
+      if (type == "success") {
+        this.$toast.success(text, {
+          position: "top-right",
+          closeOnClick: true,
+          hideProgressBar: true,
+          timeout: 3000,
+          icon: "fa fa-check",
+        });
+      } else if (type == "error") {
+        this.$toast.error(text, {
+          position: "top-right",
+          closeOnClick: true,
+          hideProgressBar: true,
+          timeout: 3000,
+          icon: "fa fa-exclamation-triangle",
+        });
+      }
     },
   },
 };
 </script>
 
-<style scoped lang="scss" >
+<style scoped lang="scss">
 .navbar-brand {
   padding-top: 8px;
   margin-right: 0rem !important;
@@ -411,7 +420,6 @@ export default {
   cursor: pointer;
   border-radius: 8px;
 }
-
 
 .movie.list-menu.active {
   background-image: linear-gradient(213.65deg, #41ff8d 11.52%, #42f4ff 105.45%);

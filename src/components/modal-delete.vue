@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import "../assets/scss/style.scss";
+import "@/assets/scss/style.scss";
 
 export default {
    name : "ModalDelete",
@@ -41,7 +41,3 @@ export default {
 }
 
 </script>
-
-<style scoped>
-
-</style>

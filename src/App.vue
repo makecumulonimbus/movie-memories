@@ -6,10 +6,10 @@
 
 <script>
 export default {
-  name: "app",
-  created () {
+  name: "Apps",
+  created() {
     document.title = "MOVIE MEMORIES";
-  }
+  },
 };
 </script>
 
@@ -23,7 +23,6 @@ export default {
 }
 @font-face {
   font-family: "Sansation";
-  src: local("Sansation"),
-   url(./assets/font/Sansation%20Bold.ttf) format("truetype");
+  src: local("Sansation"), url(./assets/font/Sansation%20Bold.ttf) format("truetype");
 }
 </style>

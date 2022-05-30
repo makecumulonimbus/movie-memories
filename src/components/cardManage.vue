@@ -17,9 +17,7 @@
             ></b-dropdown-item
           >
           <b-dropdown-item @click="deleteData"
-            ><i class="icon-filter fas fa-trash" /><span
-              class="text-option-del"
-            >
+            ><i class="icon-filter fas fa-trash" /><span class="text-option-del">
               Delete</span
             ></b-dropdown-item
           >
@@ -29,7 +27,7 @@
         class="image-poster"
         loading="lazy"
         @click="toDetailPage"
-        :src="datas.imageURL ? datas.imageURL : require('@/assets/NoImage.png')"
+        :src="datas.image ? datas.image : require('@/assets/NoImage.png')"
         :alt="datas.title"
       />
       <div class="title">
@@ -42,7 +40,7 @@
 </template>
 
 <script>
-import "../assets/scss/style.scss";
+import "@/assets/scss/style.scss";
 
 export default {
   name: "CardManage",
@@ -74,7 +72,7 @@ export default {
 
 <style scoped>
 .card-item {
-  margin: 0.5rem 0rem;
+  margin: 0.6rem 0rem;
 }
 .item {
   border-radius: 10px !important;
@@ -103,6 +101,7 @@ img {
   border-style: none;
 }
 .title p {
+  text-transform: capitalize;
   font-size: 14px;
   text-align: center;
   padding: 1px;
@@ -143,6 +142,7 @@ img {
 .image-poster {
   border-radius: 10px;
   width: 100%;
+  min-height: 260px;
   height: calc(100% - 45px);
   object-fit: cover;
 }

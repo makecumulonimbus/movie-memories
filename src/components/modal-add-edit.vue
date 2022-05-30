@@ -20,7 +20,7 @@
                 id="title"
                 v-model="form.title"
                 required
-                placeholder="Enter Title"
+                placeholder="Enter title"
                 size="sm"
                 autocomplete="off"
               ></b-form-input>
@@ -31,7 +31,7 @@
               <b-form-input
                 id="sequel"
                 v-model="form.sequel"
-                placeholder="Enter Sequel"
+                placeholder="Enter sequel"
                 type="number"
                 min="0"
                 size="sm"
@@ -44,7 +44,7 @@
               <b-form-input
                 id="season"
                 v-model="form.season"
-                placeholder="Enter Season"
+                placeholder="Enter season"
                 type="number"
                 min="0"
                 size="sm"
@@ -57,7 +57,7 @@
               <b-form-input
                 id="episode"
                 v-model="form.episode"
-                placeholder="Enter Episode"
+                placeholder="Enter episode"
                 size="sm"
                 autocomplete="off"
               ></b-form-input>
@@ -71,13 +71,12 @@
               <b-form-input
                 id="year"
                 v-model="form.year"
-                placeholder="Enter Year"
+                placeholder="Enter year"
                 type="number"
                 min="0"
                 size="sm"
                 autocomplete="off"
               ></b-form-input>
-              
             </b-form-group>
           </div>
           <div class="col-lg-3 col-md-6">
@@ -97,7 +96,6 @@
                 id="studio"
                 v-model="form.studio"
                 :options="studios"
-                placeholder="Enter Studio"
                 size="sm"
                 autocomplete="off"
               ></b-form-select>
@@ -110,7 +108,7 @@
                 v-model="form.status"
                 :options="status"
                 required
-                placeholder="Enter Status"
+                placeholder="Enter status"
                 size="sm"
                 autocomplete="off"
               ></b-form-select>
@@ -124,8 +122,9 @@
               <b-form-input
                 id="director"
                 v-model="form.director"
-                placeholder="Enter Director"
+                placeholder="Enter director"
                 size="sm"
+                autocomplete="off"
               ></b-form-input>
               <!-- <vue-bootstrap-typeahead
                 :data="directors"
@@ -141,7 +140,7 @@
               <b-form-tags
                 id="actot"
                 v-model="form.actor"
-                placeholder="Enter Actors"
+                placeholder="Enter full name"
                 size="sm"
                 autocomplete="off"
               ></b-form-tags>
@@ -166,7 +165,7 @@
               <b-form-input
                 id="trailerURL"
                 v-model="form.trailerURL"
-                placeholder="Enter Enter youtube id"
+                placeholder="Enter youtube id"
                 size="sm"
                 autocomplete="off"
               ></b-form-input>
@@ -180,14 +179,14 @@
               <b-form-textarea
                 id="detail"
                 v-model="form.detail"
-                placeholder="Enter Detail"
+                placeholder="Enter detail"
                 rows="3"
                 max-rows="6"
                 autocomplete="off"
               ></b-form-textarea>
             </b-form-group>
           </div>
-           <div class="col-lg-6 col-md-12">
+          <div class="col-lg-6 col-md-12">
             <b-form-group label="Rating :" class="rate">
               <star-rating
                 v-model="form.rating"
@@ -212,41 +211,61 @@
 </template>
 
 <script>
+import firebaseApp from "@/firebase/firebase_app";
+import setupData from "@/firebase/setup-data";
 import StarRating from "vue-star-rating";
 // import VueBootstrapTypeahead from "vue-bootstrap-typeahead";
 // import _ from "underscore";
-import firebaseApp from "../firebase/firebase_app";
-
 
 export default {
   name: "ModalAddEdit",
+  created() {
+    this.loadSetupData();
+  },
   data() {
     return {
       directors: [],
-     
       selectedDirec: null,
       status: [
         { value: "watched", text: "Watched" },
         { value: "wanted", text: "Wanted" },
       ],
-      studios : [],
-      genres : []
+      studios: [],
+      genres: [],
     };
   },
   components: {
     StarRating,
- 
     // VueBootstrapTypeahead,
   },
   props: ["formMode", "headName", "form"],
   // watch: {
   //   form: _.debounce(function (direc) {
   //     console.log(direc)
-      
+
   //     this.getDirector(direc);
   //   }, 500),
   // },
   methods: {
+    async loadSetupData() {
+      //GENRE
+      var genreStore = this.$store.getters.getGenreData;
+      if (genreStore.length == 0) {
+        this.genres = await setupData.getGenreData();
+        this.$store.dispatch("setGenre", this.genres);
+      } else {
+        this.genres = genreStore;
+      }
+
+      //STUDIO
+      var studioStore = this.$store.getters.getStudioData;
+      if (studioStore.length == 0) {
+        this.studios = await setupData.getStudioData();
+        this.$store.dispatch("setStudio", this.studios);
+      } else {
+        this.studios = studioStore;
+      }
+    },
     async getDirector(query) {
       if (query != "") {
         const directorRef = firebaseApp.firestore().collection("director");
@@ -278,5 +297,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

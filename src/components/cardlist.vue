@@ -1,6 +1,5 @@
 <template>
   <div class="card-item col-lg-2 col-md-3 col-sm-4 col-6">
-    
     <div class="item" :class="checkPath($route.name)">
       <div class="dropdown-option">
       <b-dropdown
@@ -51,7 +50,7 @@
 </template>
 
 <script>
-import "../assets/scss/style.scss";
+import "@/assets/scss/style.scss";
 
 export default {
   name: "CardList",
@@ -83,7 +82,7 @@ export default {
 
 <style scoped>
 .card-item {
-  margin: 0.5rem 0rem;
+  margin: 0.6rem 0rem;
 }
 .item {
   border-radius: 10px !important;
@@ -113,6 +112,7 @@ img {
   border-style: none;
 }
 .title p {
+  text-transform: capitalize;
   font-size: 14px;
   text-align: center;
   padding: 1px;
@@ -154,6 +154,7 @@ img {
   cursor: pointer;
   border-radius: 10px;
   width: 100%;
+  min-height: 260px;
   height: calc(100% - 45px);
   object-fit: cover;
 }

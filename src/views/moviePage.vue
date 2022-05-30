@@ -12,25 +12,26 @@
     <div v-if="!loading">
       <div class="hasData">
         <div class="addData pl-3 pr-3 pt-1 pb-1">
-          <div>
-            <div v-if="movieList.length != 0">
-              <div class="numItem" v-if="itemStart != totalDatas">
-                {{ itemStart }} - {{ itemEnd }} of {{ totalDatas }}
-              </div>
-              <div class="numItem" v-if="itemStart == totalDatas">
-                {{ itemStart }} of {{ totalDatas }}
-              </div>
+        
+          <div v-if="movieList.length != 0">
+            <div class="numItem" v-if="itemStart != totalDatas">
+              {{ itemStart }} - {{ itemEnd }} of {{ totalDatas }}
+            </div>
+            <div class="numItem" v-if="itemStart == totalDatas">
+              {{ itemStart }} of {{ totalDatas }}
             </div>
           </div>
+          <div v-if="movieList.length == 0 && filterMode == ''"></div>
           <div class="filterNameSelect" v-if="filterMode != ''">
-          <i class="fas fa-star" v-if="filterMode == 'rating'"/>
-          <i class="fas fa-calendar" v-if="filterMode == 'year'"/>
-          <i class="fas fa-building" v-if="filterMode == 'studio'"/>
-          <i class="fas fa-film" v-if="filterMode == 'genre'"/>
-          <i class="fas fa-user" v-if="filterMode == 'director'"/>
-          <i class="fas fa-users" v-if="filterMode == 'actor'"/>
-          <i class="fas fa-search" v-if="filterMode == 'search'"/>
-          {{filterMode}} : {{filterValue ? filterValue : '-'}}
+            <i class="fas fa-star" v-if="filterMode == 'rating'" />
+            <i class="fas fa-calendar" v-if="filterMode == 'year'" />
+            <i class="fas fa-building" v-if="filterMode == 'studio'" />
+            <i class="fas fa-film" v-if="filterMode == 'genre'" />
+            <i class="fas fa-user" v-if="filterMode == 'director'" />
+            <i class="fas fa-users" v-if="filterMode == 'actor'" />
+            <i class="fas fa-search" v-if="filterMode == 'search'" />
+            {{ filterMode }} :
+            <span class="text-small-filter">{{ filterValue ? filterValue : "-" }}</span>
           </div>
           <div class="btn-addData">
             <b-button @click="addItemModal" id="add" class="btn-confirm"
@@ -93,15 +94,16 @@
 </template>
 
 <script>
-import CardList from "../components/cardlist.vue";
-import FilterMenu from "../components/filtermenu.vue";
-import Pagination from "../components/pagination.vue";
-import firebaseApp from "../firebase/firebase_app";
-import LoadingData from "../components/loadingData.vue";
-import "../assets/scss/style.scss";
-import ModalDelete from "../components/modal-delete.vue";
-import ModalAddEdit from "../components/modal-add-edit.vue";
-import DetailModal from "../components/detailModal.vue";
+import "@/assets/scss/style.scss";
+import CardList from "@/components/cardlist";
+import DetailModal from "@/components/detailModal";
+import FilterMenu from "@/components/filtermenu";
+import firebaseApp from "@/firebase/firebase_app";
+import LoadingData from "@/components/loadingData";
+import ModalAddEdit from "@/components/modal-add-edit";
+import ModalDelete from "@/components/modal-delete";
+import Pagination from "@/components/pagination";
+import updateDashboard from "@/firebase/firebase_function";
 
 export default {
   name: "MoviePage",
@@ -133,10 +135,7 @@ export default {
       formMode: "",
       form: {},
       filterMode: "",
-      filterValue : "",
-      // genres: [],
-      // studios: [],
-
+      filterValue: "",
       statusMovie: "all",
       search: "",
     };
@@ -147,55 +146,19 @@ export default {
     });
   },
   created() {
-    // this.loadGenre();
-    // this.loadStudio();
     this.loadMovies();
   },
   methods: {
-    // loadGenre() {
-    //   const genreRef = firebaseApp.firestore().collection("genre");
-    //   return genreRef.get().then((document) => {
-    //     document.forEach((doc) => {
-    //       const dataGenres = doc.data().genre;
-    //       var newGenre = [];
-    //       dataGenres.map((ele) => {
-    //         var elementData = {
-    //           value: ele,
-    //           text: ele,
-    //         };
-    //         newGenre.push(elementData);
-    //       });
-    //       this.genres = newGenre;
-    //     });
-    //   });
-    // },
-    // loadStudio() {
-    //   const studioRef = firebaseApp.firestore().collection("studio");
-    //   return studioRef.get().then((document) => {
-    //     document.forEach((doc) => {
-    //       const dataStudio = doc.data().studio;
-    //       var newStudio = [];
-    //       dataStudio.map((ele) => {
-    //         var elementData = {
-    //           value: ele,
-    //           text: ele,
-    //         };
-    //         newStudio.push(elementData);
-    //       });
-    //       this.studios = newStudio;
-    //     });
-    //   });
-    // },
     filterStatus(filter) {
       this.statusMovie = filter;
-      this.filterMode = ''
-      this.filterValue = ''
+      this.filterMode = "";
+      this.filterValue = "";
       this.$store.dispatch("changePage", 0);
       this.loadMovies();
     },
     searchValue(value) {
-      this.filterMode = ''
-      this.filterValue = ''
+      this.filterMode = "";
+      this.filterValue = "";
       this.search = value;
       this.loadMovies();
     },
@@ -213,20 +176,31 @@ export default {
           .where("title", ">=", this.search)
           .where("title", "<=", this.search + "\uf8ff");
       } else if (this.statusMovie != "all" && this.search == "") {
-          filterRef = movieRef
-            .where("status", "==", this.statusMovie)
-            .orderBy("createAt", "desc");
+        filterRef = movieRef
+          .where("status", "==", this.statusMovie)
+          .orderBy("createAt", "desc");
       } else {
-        if(this.filterMode != '' && this.filterValue != '' && this.filterMode != 'actor'){
-          filterRef =  movieRef.where(this.filterMode, "==", this.filterValue)
-          .orderBy("createAt", "desc");
-        }else if(this.filterMode == 'actor'){
-          filterRef =  movieRef.where(this.filterMode, "array-contains", this.filterValue)
-          .orderBy("createAt", "desc");
-        }else{
+        if (
+          this.filterMode != "" &&
+          this.filterValue != "" &&
+          this.filterMode != "actor"
+        ) {
+          if (this.filterMode == "director") {
+            filterRef = movieRef
+              .where(this.filterMode, ">=", this.filterValue)
+              .where(this.filterMode, "<=", this.filterValue + "\uf8ff");
+          } else {
+            filterRef = movieRef
+              .where(this.filterMode, "==", this.filterValue)
+              .orderBy("createAt", "desc");
+          }
+        } else if (this.filterMode == "actor") {
+          filterRef = movieRef
+            .where(this.filterMode, "array-contains", this.filterValue)
+            .orderBy("createAt", "desc");
+        } else {
           filterRef = movieRef.orderBy("createAt", "desc");
         }
-        
       }
 
       return filterRef
@@ -253,7 +227,7 @@ export default {
               querySnapshot.forEach((doc) => {
                 const dataElement = {
                   id: doc.id,
-                  title: this.capitalText(doc.data().title),
+                  title: doc.data().title,
                   sequel: doc.data().sequel,
                   year: doc.data().year,
                   genre: doc.data().genre,
@@ -289,9 +263,7 @@ export default {
       // this.currentPage = page;
       this.loadMovies();
     },
-    capitalText(text) {
-      return text[0].toUpperCase() + text.slice(1);
-    },
+
     addItemModal() {
       this.formMode = "Add";
       this.form = {
@@ -335,15 +307,20 @@ export default {
       this.$bvModal.show("modal-delete");
     },
     filterData(data) {
-      this.statusMovie = 'all'
-      if(data.mode == 'search'){
-        this.search = data.value
-      }else{
-          this.search = ''
+      this.statusMovie = "all";
+      if (data.mode == "search") {
+        this.search = data.value;
+      } else {
+        this.search = "";
       }
-      this.filterMode = data.mode
-      this.filterValue = data.value
+      this.filterMode = data.mode;
+      this.filterValue = data.mode != "rating" ? data.value.toLowerCase() : data.value;
       this.loadMovies();
+    },
+    actorsLowercase(actors) {
+      return actors.map((ele) => {
+        return (ele = ele.trim().toLowerCase());
+      });
     },
     submit() {
       if (this.formMode == "Add") {
@@ -355,7 +332,7 @@ export default {
           studio: this.form.studio,
           status: this.form.status,
           director: this.form.director.trim().toLowerCase(),
-          actor: this.form.actor,
+          actor: this.actorsLowercase(this.form.actor),
           imageURL: this.form.imageURL,
           trailerURL: this.form.trailerURL,
           detail: this.form.detail,
@@ -372,8 +349,8 @@ export default {
           genre: this.form.genre,
           studio: this.form.studio,
           status: this.form.status,
-          director: this.form.director,
-          actor: this.form.actor,
+          director: this.form.director.trim().toLowerCase(),
+          actor: this.actorsLowercase(this.form.actor),
           imageURL: this.form.imageURL,
           trailerURL: this.form.trailerURL,
           detail: this.form.detail,
@@ -390,12 +367,15 @@ export default {
       return movieRef
         .add(data)
         .then((res) => {
-          this.movieList.splice(-1)
-          data.id = res.id
-          this.movieList.unshift(data)
-          this.totalDatas = this.totalDatas + 1
+          if (this.movieList.length >= 30) {
+            this.movieList.splice(-1);
+          }
+          data.id = res.id;
+          this.movieList.unshift(data);
+          this.totalDatas = this.totalDatas + 1;
           this.loading = false;
 
+          updateDashboard.addMainData(data, "movie");
           this.notifyAlert("success", "Add movie");
         })
         .catch((err) => {
@@ -411,15 +391,16 @@ export default {
       return movieRef
         .update(data)
         .then(() => {
-          if(this.statusMovie != 'all' & this.filterMode != ''){
-             this.loadMovies();
-          }else{
-            data.id = id
-            data.createAt = this.movieSelect.createAt
-            this.movieList = this.movieList.map(u => u.id !== data.id ? u : data);
+          if ((this.statusMovie != "all") & (this.filterMode != "")) {
+            this.loadMovies();
+          } else {
+            data.id = id;
+            data.createAt = this.movieSelect.createAt;
+            this.movieList = this.movieList.map((u) => (u.id !== data.id ? u : data));
             this.loading = false;
           }
 
+          updateDashboard.editMainData(this.movieSelect, data, "movie");
           this.notifyAlert("success", "Edit movie");
         })
         .catch((err) => {
@@ -436,6 +417,7 @@ export default {
       return movieRef
         .delete()
         .then(() => {
+          updateDashboard.deleteMainData(this.movieSelect, "movie");
           this.loadMovies();
           this.notifyAlert("success", "Delete movie");
         })

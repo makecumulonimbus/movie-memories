@@ -9,7 +9,7 @@ import AnimePage from '@/views/animePage'
 import DashboardPage from '@/views/dashboard'
 import LoginPage from '@/views/loginPage'
 import Changelog from '@/views/changeLog'
-import ManagePage from '@/views/manage'
+import FavoritePage from '@/views/favorite'
 
 Vue.use(VueRouter)
 
@@ -60,9 +60,9 @@ const routes = [
         }
       },
       {
-        path: '/manage/:tab',
-        name: 'Manage',
-        component: ManagePage,
+        path: '/favorite/:tab',
+        name: 'Favorite',
+        component: FavoritePage,
         meta: {
           requiresAuth: true
         }

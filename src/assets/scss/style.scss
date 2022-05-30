@@ -136,7 +136,6 @@ input {
   .embed-responsive {
     max-height: 430px;
   }
- 
 }
 @media screen and (min-width: 1850px) {
   .embed-responsive {
@@ -300,7 +299,6 @@ input {
   }
 }
 
-
 .form-control {
   border-radius: 6px !important;
 }
@@ -321,8 +319,53 @@ input {
 //   justify-content: center;
 // }
 
-.filterNameSelect{
+.filterNameSelect {
   padding-top: 10px;
   font-size: 18px;
   text-transform: uppercase;
+}
+.filterNameSelect svg {
+  color: #5399ff;
+  margin-right: 2px;
+}
+.text-small-filter {
+  text-transform: capitalize;
+}
+
+.item {
+  position: relative;
+  overflow: hidden;
+}
+.item:after {
+  content: "";
+  position: absolute;
+  top: -15%;
+  left: -60%;
+  width: 20%;
+  height: 140%;
+  opacity: 0;
+  transform: rotate(30deg);
+
+  background: rgba(255, 255, 255, 0.13);
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.13) 0%,
+    rgba(255, 255, 255, 0.13) 77%,
+    rgba(255, 255, 255, 0.5) 92%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+/* Hover state - trigger effect */
+.item:hover:after {
+  opacity: 1;
+  left: 130%;
+  transition-property: left, top, opacity;
+  transition-duration: 0.5s, 0.5s, 0.15s;
+  transition-timing-function: ease;
+}
+
+/* Active state */
+.item:active:after {
+  opacity: 0; 
 }

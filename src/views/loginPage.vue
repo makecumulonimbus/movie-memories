@@ -48,9 +48,9 @@
 </template>
 
 <script>
-import firebaseApp from "../firebase/firebase_app";
-import "../assets/scss/style.scss";
-import LoadingComponent from "../components/loading.vue";
+import "@/assets/scss/style.scss";
+import firebaseApp from "@/firebase/firebase_app";
+import LoadingComponent from "@/components/loading";
 
 export default {
   name: "LoginPage",
