@@ -14,6 +14,10 @@
           <div>- เปลี่ยนเมนู-ไอคอน Manage เป็น Favorite</div>
           <div>- แก้การแสดงผลชื่อให้ตัวแรกเป็นตัวใหญ่</div>
           <div>- เพิ่มความสูงขั้นต่ำของรูปโปสเตอร์</div>
+          <div>- set data genre และ studio เป็น global data</div>
+          <div>- แก้ไขฟิลเตอร์ genre studio director actors ให้ค้นหาอย่างถูกต้อง</div>
+          <div>- ปรับสีและขนาดตัวอักษรต่างๆ ให้เหมาะสมกับเว็บ</div>
+          <div>- เพิ่ม shine effect css เมื่อชี้ไปยัง card item</div>
         </div>
         <div class="log-ver mt-4 mb-4">
           <h4 class="">Version 2.0.0</h4>

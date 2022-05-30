@@ -17,9 +17,7 @@
             ></b-dropdown-item
           >
           <b-dropdown-item @click="deleteData"
-            ><i class="icon-filter fas fa-trash" /><span
-              class="text-option-del"
-            >
+            ><i class="icon-filter fas fa-trash" /><span class="text-option-del">
               Delete</span
             ></b-dropdown-item
           >
@@ -34,7 +32,7 @@
       />
       <div class="title">
         <p>
-          {{ this.capitalText(datas.name) }}
+          {{ datas.name }}
         </p>
       </div>
     </div>
@@ -42,7 +40,7 @@
 </template>
 
 <script>
-import "../assets/scss/style.scss";
+import "@/assets/scss/style.scss";
 
 export default {
   name: "CardManage",
@@ -58,9 +56,6 @@ export default {
       } else {
         return "bg-advanced";
       }
-    },
-    capitalText(text) {
-      return text[0].toUpperCase() + text.slice(1);
     },
     editData() {
       this.$emit("editData", this.datas);
@@ -106,6 +101,7 @@ img {
   border-style: none;
 }
 .title p {
+  text-transform: capitalize;
   font-size: 14px;
   text-align: center;
   padding: 1px;

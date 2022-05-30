@@ -79,7 +79,7 @@
                 placeholder="Enter Studio"
                 size="sm"
                 v-model="form.studioSelect"
-                :options="form.studio"
+                :options="form.studios.length != 0 ? form.studios : this.$store.getters.getStudioData"
                 autocomplete="off"
               ></b-form-select>
             </b-form-group>
@@ -90,7 +90,7 @@
                 placeholder="Enter Genre"
                 size="sm"
                 v-model="form.genreSelect"
-                :options="form.genre"
+                :options="form.genres.length != 0 ? form.genres : this.$store.getters.getGenreData"
                 autocomplete="off"
               ></b-form-select>
             </b-form-group>
@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import "../assets/scss/style.scss";
+import "@/assets/scss/style.scss";
 
 export default {
   name: "FilterModal",

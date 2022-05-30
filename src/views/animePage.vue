@@ -1,6 +1,10 @@
 <template>
   <div>
-    <FilterMenu @filterStatus="filterStatus" @searchValue="searchValue" @filterData="filterData"/>
+    <FilterMenu
+      @filterStatus="filterStatus"
+      @searchValue="searchValue"
+      @filterData="filterData"
+    />
 
     <div v-if="loading" class="loading">
       <LoadingData />
@@ -9,23 +13,25 @@
     <div v-if="!loading">
       <div class="hasData">
         <div class="addData pl-3 pr-3 pt-1 pb-1">
-          <div>
-            <div v-if="animeList.length != 0">
-              <div class="numItem" v-if="itemStart != totalDatas">
-                {{ itemStart }} - {{ itemEnd }} of {{ totalDatas }}
-              </div>
-              <div class="numItem" v-if="itemStart == totalDatas">
-                {{ itemStart }} of {{ totalDatas }}
-              </div>
+          <div v-if="animeList.length != 0">
+            <div class="numItem" v-if="itemStart != totalDatas">
+              {{ itemStart }} - {{ itemEnd }} of {{ totalDatas }}
+            </div>
+            <div class="numItem" v-if="itemStart == totalDatas">
+              {{ itemStart }} of {{ totalDatas }}
             </div>
           </div>
-          <div class="filterNameSelect" v-if="filterMode != '' && filterMode != 'director' && filterMode != 'actor'">
-          <i class="fas fa-star" v-if="filterMode == 'rating'"/>
-          <i class="fas fa-calendar" v-if="filterMode == 'year'"/>
-          <i class="fas fa-building" v-if="filterMode == 'studio'"/>
-          <i class="fas fa-film" v-if="filterMode == 'genre'"/>
-          <i class="fas fa-search" v-if="filterMode == 'search'"/>
-          {{filterMode}} : {{filterValue ? filterValue : '-'}}
+          <div v-if="animeList.length == 0 && filterMode == ''"></div>
+          <div
+            class="filterNameSelect"
+            v-if="filterMode != '' && filterMode != 'director' && filterMode != 'actor'"
+          >
+            <i class="fas fa-star" v-if="filterMode == 'rating'" />
+            <i class="fas fa-calendar" v-if="filterMode == 'year'" />
+            <i class="fas fa-building" v-if="filterMode == 'studio'" />
+            <i class="fas fa-film" v-if="filterMode == 'genre'" />
+            <i class="fas fa-search" v-if="filterMode == 'search'" />
+            {{ filterMode }} : <span class="text-small-filter">{{ filterValue ? filterValue : "-" }}</span>
           </div>
           <div class="btn-addData">
             <b-button @click="addItemModal" id="add" class="btn-confirm"
@@ -88,16 +94,16 @@
 </template>
 
 <script>
-import CardList from "../components/cardlist.vue";
-import FilterMenu from "../components/filtermenu.vue";
-import Pagination from "../components/pagination.vue";
-import firebaseApp from "../firebase/firebase_app";
-import LoadingData from "../components/loadingData.vue";
-import "../assets/scss/style.scss";
-import ModalDelete from "../components/modal-delete.vue";
-import ModalAddEdit from "../components/modal-add-edit.vue";
-import DetailModal from "../components/detailModal.vue";
-import updateDashboard from "../firebase/firebase_function.js"
+import "@/assets/scss/style.scss";
+import CardList from "@/components/cardlist";
+import DetailModal from "@/components/detailModal";
+import FilterMenu from "@/components/filtermenu";
+import firebaseApp from "@/firebase/firebase_app";
+import LoadingData from "@/components/loadingData";
+import ModalAddEdit from "@/components/modal-add-edit";
+import ModalDelete from "@/components/modal-delete";
+import Pagination from "@/components/pagination";
+import updateDashboard from "@/firebase/firebase_function";
 
 export default {
   name: "AnimePage",
@@ -120,7 +126,7 @@ export default {
       formMode: "",
       form: {},
       filterMode: "",
-      filterValue : "",
+      filterValue: "",
       statusAnime: "all",
       search: "",
     };
@@ -145,14 +151,14 @@ export default {
   methods: {
     filterStatus(filter) {
       this.statusAnime = filter;
-      this.filterMode = ''
-      this.filterValue = ''
+      this.filterMode = "";
+      this.filterValue = "";
       this.$store.dispatch("changePage", 0);
       this.loadAnimes();
     },
     searchValue(value) {
-      this.filterMode = ''
-      this.filterValue = ''
+      this.filterMode = "";
+      this.filterValue = "";
       this.search = value;
       this.loadAnimes();
     },
@@ -175,10 +181,16 @@ export default {
           .where("status", "==", this.statusAnime)
           .orderBy("createAt", "desc");
       } else {
-         if(this.filterMode != '' && this.filterValue != '' && this.filterMode != 'director' && this.filterMode != 'actor'){
-          filterRef =  animeRef.where(this.filterMode, "==", this.filterValue)
-          .orderBy("createAt", "desc");
-        }else{
+        if (
+          this.filterMode != "" &&
+          this.filterValue != "" &&
+          this.filterMode != "director" &&
+          this.filterMode != "actor"
+        ) {
+          filterRef = animeRef
+            .where(this.filterMode, "==", this.filterValue)
+            .orderBy("createAt", "desc");
+        } else {
           filterRef = animeRef.orderBy("createAt", "desc");
         }
       }
@@ -282,10 +294,10 @@ export default {
       this.$bvModal.show("modal-delete");
     },
     filterData(data) {
-      this.statusAnime = 'all'
-      this.search = ""
+      this.statusAnime = "all";
+      this.search = "";
       this.filterMode = data.mode
-      this.filterValue = data.value
+      this.filterValue = data.mode != 'rating' ? data.value.toLowerCase() : data.value
       this.loadAnimes();
     },
     submit() {
@@ -331,15 +343,15 @@ export default {
       return animeRef
         .add(data)
         .then((res) => {
-          if(this.animeList.length >= 30){
-            this.animeList.splice(-1)
+          if (this.animeList.length >= 30) {
+            this.animeList.splice(-1);
           }
-          data.id = res.id
-          this.animeList.unshift(data)
-          this.totalDatas = this.totalDatas + 1
+          data.id = res.id;
+          this.animeList.unshift(data);
+          this.totalDatas = this.totalDatas + 1;
           this.loading = false;
 
-          updateDashboard.addMainData(data,'anime')
+          updateDashboard.addMainData(data, "anime");
           this.notifyAlert("success", "Add anime");
         })
         .catch((err) => {
@@ -355,17 +367,16 @@ export default {
       return animeRef
         .update(data)
         .then(() => {
-          
-          if(this.statusAnime != 'all' & this.filterMode != ''){
-             this.loadAnimes();
-          }else{
-            data.id = id
-            data.createAt = this.animeSelect.createAt
-            this.animeList = this.animeList.map(u => u.id !== data.id ? u : data);
+          if ((this.statusAnime != "all") & (this.filterMode != "")) {
+            this.loadAnimes();
+          } else {
+            data.id = id;
+            data.createAt = this.animeSelect.createAt;
+            this.animeList = this.animeList.map((u) => (u.id !== data.id ? u : data));
             this.loading = false;
           }
-          
-          updateDashboard.editMainData(this.animeSelect,data,'anime')
+
+          updateDashboard.editMainData(this.animeSelect, data, "anime");
           this.notifyAlert("success", "Edit anime");
         })
         .catch((err) => {
@@ -382,7 +393,7 @@ export default {
       return animeRef
         .delete()
         .then(() => {
-          updateDashboard.deleteMainData(this.animeSelect,'anime')
+          updateDashboard.deleteMainData(this.animeSelect, "anime");
           this.loadAnimes();
           this.notifyAlert("success", "Delete anime");
         })
@@ -411,7 +422,7 @@ export default {
         trailerURL: this.animeSelect.trailerURL,
         detail: this.animeSelect.detail,
         rating: this.animeSelect.rating,
-        createAt : this.animeSelect.createAt,
+        createAt: this.animeSelect.createAt,
       };
       this.$bvModal.show("modal-detail");
       // this.$router.push("/anime/" + data.id);

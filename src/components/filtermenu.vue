@@ -63,8 +63,11 @@
 
       <div class="right-filter-main d-flex">
         <div class="btn-filter">
-          <b-button variant="primary" id="filter" @click="filterAll"  
-          v-bind:class="{
+          <b-button
+            variant="primary"
+            id="filter"
+            @click="filterAll"
+            v-bind:class="{
               'btn-confirm': form.filterMode != '',
               'btn-cancle': form.filterMode == '' && form.filterData == '',
             }"
@@ -92,35 +95,38 @@
         </div>
       </div>
     </div>
-    <FilterModal @toggleModal="toggleModal" @submit="submit" :form="form"  @clearFilter="clearFilter"/>
+    <FilterModal
+      @toggleModal="toggleModal"
+      @submit="submit"
+      :form="form"
+      @clearFilter="clearFilter"
+    />
   </div>
 </template>
 
 <script>
-import "../assets/scss/style.scss";
-import FilterModal from "../components/filterModal.vue";
+import "@/assets/scss/style.scss";
+import FilterModal from "@/components/filterModal";
 
 export default {
   name: "FilterMenu",
-
   data() {
     return {
       windowWidth: window.innerWidth,
       statusActive: "all",
       search: "",
       form: {
-        searchValue : "",
+        searchValue: "",
         filterMode: "",
         mode: [
           { value: "", text: "" },
           { value: "genre", text: "Genre" },
-          { value: "year", text: "Year" },
-          { value: "rating", text: "Rating" },
           { value: "studio", text: "Studio" },
+          { value: "rating", text: "Rating" },
           { value: "director", text: "Director" },
           { value: "actor", text: "Actor" },
+          { value: "year", text: "Year" },
           { value: "search", text: "Search" },
-
         ],
         filterData: "",
         ratingSelect: "",
@@ -147,8 +153,8 @@ export default {
           { value: "2", text: "2" },
           { value: "1", text: "1" },
         ],
-        genre: [],
-        studio: [],
+        genres: this.$store.getters.getGenreData,
+        studios: this.$store.getters.getStudioData,
       },
     };
   },
@@ -165,6 +171,7 @@ export default {
     filterStatus(status) {
       this.statusActive = status;
       this.$emit("filterStatus", this.statusActive);
+      this.clearFilter()
     },
     filterAll() {
       this.form.searchFil = this.search;
@@ -175,29 +182,28 @@ export default {
       this.$bvModal.hide("modal-filter");
     },
     submit() {
-    
-        if (this.form.filterMode == "genre") {
-          this.form.filterData = this.form.genreSelect;
-        } else if (this.form.filterMode == "year") {
-          this.form.filterData = this.form.yearSelected;
-        } else if (this.form.filterMode == "rating") {
-          this.form.filterData = parseInt(this.form.ratingSelect);
-        } else if (this.form.filterMode == "studio") {
-          this.form.filterData = this.form.studioSelect;
-        } else if (this.form.filterMode == "director") {
-          this.form.filterData = this.form.directorSelect;
-        } else if (this.form.filterMode == "actor") {
-          this.form.filterData = this.form.actorSelect;
-        }else if(this.form.filterMode == "search"){
-          this.form.filterData = this.form.searchValue.trim().toLowerCase();
-        }else {
-          this.form.filterData = '';
-        }
-      
-      var filter = {
-        mode : this.form.filterMode,
-        value : this.form.filterData,
+      if (this.form.filterMode == "genre") {
+        this.form.filterData = this.form.genreSelect;
+      } else if (this.form.filterMode == "year") {
+        this.form.filterData = this.form.yearSelected;
+      } else if (this.form.filterMode == "rating") {
+        this.form.filterData = parseInt(this.form.ratingSelect);
+      } else if (this.form.filterMode == "studio") {
+        this.form.filterData = this.form.studioSelect;
+      } else if (this.form.filterMode == "director") {
+        this.form.filterData = this.form.directorSelect;
+      } else if (this.form.filterMode == "actor") {
+        this.form.filterData = this.form.actorSelect;
+      } else if (this.form.filterMode == "search") {
+        this.form.filterData = this.form.searchValue.trim().toLowerCase();
+      } else {
+        this.form.filterData = "";
       }
+
+      var filter = {
+        mode: this.form.filterMode,
+        value: this.form.filterData,
+      };
 
       this.$emit("filterData", filter);
       this.$bvModal.hide("modal-filter");
@@ -205,25 +211,25 @@ export default {
     searchValue() {
       this.$emit("searchValue", this.search.trim().toLowerCase());
     },
-    clearFilter(){
-      this.form.searchValue = ''
-      this.form.filterMode = ''
-      this.form.filterData = ''
-      
-      this.form.genreSelect = ''
-      this.form.yearSelected = ''
-      this.form.ratingSelect = ''
-      this.form.studioSelect = ''
-      this.form.directorSelect = ''
-      this.form.actorSelect = ''
+    clearFilter() {
+      this.form.searchValue = "";
+      this.form.filterMode = "";
+      this.form.filterData = "";
+      //list fillter
+      this.form.genreSelect = "";
+      this.form.yearSelected = "";
+      this.form.ratingSelect = "";
+      this.form.studioSelect = "";
+      this.form.directorSelect = "";
+      this.form.actorSelect = "";
 
       var filter = {
-        mode : '',
-        value : ''
-      }
+        mode: "",
+        value: "",
+      };
       this.$emit("filterData", filter);
       this.$bvModal.hide("modal-filter");
-    }
+    },
   },
 };
 </script>

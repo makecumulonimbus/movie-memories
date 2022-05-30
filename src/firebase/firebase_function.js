@@ -1,4 +1,4 @@
-import firebaseApp from "../firebase/firebase_app.js"
+import firebaseApp from "./firebase_app.js"
 
 const dashboardRef = firebaseApp.firestore().doc("dashboard/tD4U01fWZfmfrh4eSFIv")
 

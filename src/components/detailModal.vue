@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import "../assets/scss/style.scss";
+import "@/assets/scss/style.scss";
 import moment from "moment";
 
 export default {

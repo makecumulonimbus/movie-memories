@@ -1,15 +1,18 @@
 <template>
   <div>
-    <FilterMenu @filterStatus="filterStatus" @searchValue="searchValue" @filterData="filterData"/>
+    <FilterMenu
+      @filterStatus="filterStatus"
+      @searchValue="searchValue"
+      @filterData="filterData"
+    />
 
     <div v-if="loading" class="loading">
       <LoadingData />
     </div>
 
     <div v-if="!loading">
-      <div class="hasData" >
+      <div class="hasData">
         <div class="addData pl-3 pr-3 pt-1 pb-1">
-          <div>
           <div v-if="seriesList.length != 0">
             <div class="numItem" v-if="itemStart != totalDatas">
               {{ itemStart }} - {{ itemEnd }} of {{ totalDatas }}
@@ -18,21 +21,20 @@
               {{ itemStart }} of {{ totalDatas }}
             </div>
           </div>
-          </div>
+          <div v-if="seriesList.length == 0 && filterMode == ''"></div>
           <div class="filterNameSelect" v-if="filterMode != ''">
-          <i class="fas fa-star" v-if="filterMode == 'rating'"/>
-          <i class="fas fa-calendar" v-if="filterMode == 'year'"/>
-          <i class="fas fa-building" v-if="filterMode == 'studio'"/>
-          <i class="fas fa-film" v-if="filterMode == 'genre'"/>
-          <i class="fas fa-user" v-if="filterMode == 'director'"/>
-          <i class="fas fa-users" v-if="filterMode == 'actor'"/>
-          <i class="fas fa-search" v-if="filterMode == 'search'"/>
-          {{filterMode}} : {{filterValue ? filterValue : '-'}}</div>
+            <i class="fas fa-star" v-if="filterMode == 'rating'" />
+            <i class="fas fa-calendar" v-if="filterMode == 'year'" />
+            <i class="fas fa-building" v-if="filterMode == 'studio'" />
+            <i class="fas fa-film" v-if="filterMode == 'genre'" />
+            <i class="fas fa-user" v-if="filterMode == 'director'" />
+            <i class="fas fa-users" v-if="filterMode == 'actor'" />
+            <i class="fas fa-search" v-if="filterMode == 'search'" />
+            {{ filterMode }} : <span class="text-small-filter">{{ filterValue ? filterValue : "-" }}</span>
+          </div>
           <div class="btn-addData">
             <b-button @click="addItemModal" id="add" class="btn-confirm"
-              ><i class="fas fa-plus" /><span class="pl-1 text-add"
-                >ADD</span
-              ></b-button
+              ><i class="fas fa-plus" /><span class="pl-1 text-add">ADD</span></b-button
             >
             <!-- <b-tooltip
               v-if="windowWidth < 701"
@@ -73,23 +75,34 @@
       </div>
     </div>
 
-    <ModalAddEdit :formMode="this.formMode" :headName="`series`" :form="this.form" @toggleModal="toggleModal" @submit="submit"/>
-    <ModalDelete :headName="`series`" :imageURL="this.seriesSelect.imageURL" @toggleModal="toggleModal" @deleteData="deleteSeries"/>
-     <DetailModal :headName="`series`" @toggleModal="toggleModal" :form="this.form"/>
+    <ModalAddEdit
+      :formMode="this.formMode"
+      :headName="`series`"
+      :form="this.form"
+      @toggleModal="toggleModal"
+      @submit="submit"
+    />
+    <ModalDelete
+      :headName="`series`"
+      :imageURL="this.seriesSelect.imageURL"
+      @toggleModal="toggleModal"
+      @deleteData="deleteSeries"
+    />
+    <DetailModal :headName="`series`" @toggleModal="toggleModal" :form="this.form" />
   </div>
 </template>
 
 <script>
-import CardList from "../components/cardlist.vue";
-import FilterMenu from "../components/filtermenu.vue";
-import Pagination from "../components/pagination.vue";
-import firebaseApp from "../firebase/firebase_app";
-import LoadingData from "../components/loadingData.vue";
-import "../assets/scss/style.scss";
-import ModalDelete from '../components/modal-delete.vue'
-import ModalAddEdit from '../components/modal-add-edit.vue'
-import DetailModal from '../components/detailModal.vue'
-import updateDashboard from "../firebase/firebase_function.js"
+import "@/assets/scss/style.scss";
+import CardList from "@/components/cardlist";
+import DetailModal from "@/components/detailModal";
+import FilterMenu from "@/components/filtermenu";
+import firebaseApp from "@/firebase/firebase_app";
+import LoadingData from "@/components/loadingData";
+import ModalAddEdit from "@/components/modal-add-edit";
+import ModalDelete from "@/components/modal-delete";
+import Pagination from "@/components/pagination";
+import updateDashboard from "@/firebase/firebase_function";
 
 export default {
   name: "SeriesPage",
@@ -112,9 +125,7 @@ export default {
       formMode: "",
       form: {},
       filterMode: "",
-      filterValue : "",
-      // genres: [],
-      // studios: [],
+      filterValue: "",
       statusSeries: "all",
       search: "",
     };
@@ -134,19 +145,19 @@ export default {
     LoadingData,
     ModalDelete,
     ModalAddEdit,
-    DetailModal
+    DetailModal,
   },
   methods: {
     filterStatus(filter) {
       this.statusSeries = filter;
-      this.filterMode = ''
-      this.filterValue = ''
+      this.filterMode = "";
+      this.filterValue = "";
       this.$store.dispatch("changePage", 0);
       this.loadSeries();
     },
     searchValue(value) {
-      this.filterMode = ''
-      this.filterValue = ''
+      this.filterMode = "";
+      this.filterValue = "";
       this.search = value;
       this.loadSeries();
     },
@@ -168,13 +179,25 @@ export default {
           .where("status", "==", this.statusSeries)
           .orderBy("createAt", "desc");
       } else {
-        if(this.filterMode != '' && this.filterValue != '' && this.filterMode != 'actor'){
-          filterRef =  seriesRef.where(this.filterMode, "==", this.filterValue)
-          .orderBy("createAt", "desc");
-        }else if(this.filterMode == 'actor'){
-          filterRef =  seriesRef.where(this.filterMode, "array-contains", this.filterValue)
-          .orderBy("createAt", "desc");
-        }else{
+        if (
+          this.filterMode != "" &&
+          this.filterValue != "" &&
+          this.filterMode != "actor"
+        ) {
+          if (this.filterMode == "director") {
+            filterRef = seriesRef
+              .where(this.filterMode, ">=", this.filterValue)
+              .where(this.filterMode, "<=", this.filterValue + "\uf8ff");
+          } else {
+            filterRef = seriesRef
+              .where(this.filterMode, "==", this.filterValue)
+              .orderBy("createAt", "desc");
+          }
+        } else if (this.filterMode == "actor") {
+          filterRef = seriesRef
+            .where(this.filterMode, "array-contains", this.filterValue)
+            .orderBy("createAt", "desc");
+        } else {
           filterRef = seriesRef.orderBy("createAt", "desc");
         }
       }
@@ -284,12 +307,17 @@ export default {
       this.seriesSelect = data;
       this.$bvModal.show("modal-delete");
     },
-     filterData(data) {
-      this.statusSeries = 'all'
-      this.search = ""
+    filterData(data) {
+      this.statusSeries = "all";
+      this.search = "";
       this.filterMode = data.mode
-      this.filterValue = data.value
+      this.filterValue = data.mode != 'rating' ? data.value.toLowerCase() : data.value
       this.loadSeries();
+    },
+    actorsLowercase(actors) {
+      return actors.map((ele) => {
+        return (ele = ele.trim().toLowerCase());
+      });
     },
     submit() {
       if (this.formMode == "Add") {
@@ -301,8 +329,8 @@ export default {
           genre: this.form.genre,
           studio: this.form.studio,
           status: this.form.status,
-          director: this.form.director,
-          actor: this.form.actor,
+          director: this.form.director.trim().toLowerCase(),
+          actor: this.actorsLowercase(this.form.actor),
           imageURL: this.form.imageURL,
           trailerURL: this.form.trailerURL,
           detail: this.form.detail,
@@ -320,8 +348,8 @@ export default {
           genre: this.form.genre,
           studio: this.form.studio,
           status: this.form.status,
-          director: this.form.director,
-          actor: this.form.actor,
+          director: this.form.director.trim().toLowerCase(),
+          actor: this.actorsLowercase(this.form.actor),
           imageURL: this.form.imageURL,
           trailerURL: this.form.trailerURL,
           detail: this.form.detail,
@@ -339,15 +367,15 @@ export default {
       return seriesRef
         .add(data)
         .then((res) => {
-          if(this.seriesList.length >= 30){
-            this.seriesList.splice(-1)
+          if (this.seriesList.length >= 30) {
+            this.seriesList.splice(-1);
           }
-          data.id = res.id
-          this.seriesList.unshift(data)
-          this.totalDatas = this.totalDatas + 1
+          data.id = res.id;
+          this.seriesList.unshift(data);
+          this.totalDatas = this.totalDatas + 1;
           this.loading = false;
 
-          updateDashboard.addMainData(data,'series')
+          updateDashboard.addMainData(data, "series");
           this.notifyAlert("success", "Add series");
         })
         .catch((err) => {
@@ -363,17 +391,16 @@ export default {
       return seriesRef
         .update(data)
         .then(() => {
-
-          if(this.statusSeries != 'all' & this.filterMode != ''){
-             this.loadSeries();
-          }else{
-            data.id = id
-            data.createAt = this.seriesSelect.createAt
-            this.seriesList = this.seriesList.map(u => u.id !== data.id ? u : data);
+          if ((this.statusSeries != "all") & (this.filterMode != "")) {
+            this.loadSeries();
+          } else {
+            data.id = id;
+            data.createAt = this.seriesSelect.createAt;
+            this.seriesList = this.seriesList.map((u) => (u.id !== data.id ? u : data));
             this.loading = false;
           }
 
-          updateDashboard.editMainData(this.seriesSelect,data,'series')
+          updateDashboard.editMainData(this.seriesSelect, data, "series");
           this.notifyAlert("success", "Edit series");
         })
         .catch((err) => {
@@ -390,7 +417,7 @@ export default {
       return seriesRef
         .delete()
         .then(() => {
-          updateDashboard.deleteMainData(this.seriesSelect,'series')
+          updateDashboard.deleteMainData(this.seriesSelect, "series");
           this.loadSeries();
           this.notifyAlert("success", "Delete series");
         })
@@ -421,7 +448,7 @@ export default {
         trailerURL: this.seriesSelect.trailerURL,
         detail: this.seriesSelect.detail,
         rating: this.seriesSelect.rating,
-        createAt : this.seriesSelect.createAt,
+        createAt: this.seriesSelect.createAt,
       };
       this.$bvModal.show("modal-detail");
       // this.$router.push("/series/" + data.id);

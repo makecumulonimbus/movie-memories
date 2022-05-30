@@ -1,6 +1,5 @@
 <template>
   <div class="card-item col-lg-2 col-md-3 col-sm-4 col-6">
-    
     <div class="item" :class="checkPath($route.name)">
       <div class="dropdown-option">
       <b-dropdown
@@ -41,7 +40,7 @@
       />
       <div class="title">
         <p>
-          {{ this.capitalText(datas.title) }} {{ datas.sequel ? datas.sequel : "" }}
+          {{ datas.title }} {{ datas.sequel ? datas.sequel : "" }}
           {{ datas.season ? "SS" + datas.season : "" }}
           {{ datas.year ? "(" + datas.year + ")" : "" }}
         </p>
@@ -51,7 +50,7 @@
 </template>
 
 <script>
-import "../assets/scss/style.scss";
+import "@/assets/scss/style.scss";
 
 export default {
   name: "CardList",
@@ -67,9 +66,6 @@ export default {
       } else {
         return "bg-advanced";
       }
-    },
-    capitalText(text) {
-      return text[0].toUpperCase() + text.slice(1);
     },
     editData() {
       this.$emit("editData", this.datas);
@@ -116,6 +112,7 @@ img {
   border-style: none;
 }
 .title p {
+  text-transform: capitalize;
   font-size: 14px;
   text-align: center;
   padding: 1px;

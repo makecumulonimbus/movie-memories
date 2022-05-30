@@ -11,9 +11,7 @@
               'btn-confirm': tabActive == 'director',
               'btn-cancle': tabActive != 'director',
             }"
-            ><i class="icon-filter fas fa-user-tie" /><span>
-              DIRECTOR</span
-            ></b-button
+            ><i class="icon-filter fas fa-user-tie" /><span> DIRECTOR</span></b-button
           >
           <b-tooltip
             v-if="windowWidth < 701"
@@ -32,9 +30,7 @@
               'btn-confirm': tabActive == 'actors',
               'btn-cancle': tabActive != 'actors',
             }"
-            ><i class="icon-filter fas fa-user-friends" /><span>
-              ACTORS</span
-            ></b-button
+            ><i class="icon-filter fas fa-user-friends" /><span> ACTORS</span></b-button
           >
           <b-tooltip
             v-if="windowWidth < 701"
@@ -72,9 +68,7 @@
               'btn-confirm': tabActive == 'studio',
               'btn-cancle': tabActive != 'studio',
             }"
-            ><i class="icon-filter fas fa-building" /><span>
-              STUDIO</span
-            ></b-button
+            ><i class="icon-filter fas fa-building" /><span> STUDIO</span></b-button
           >
           <b-tooltip
             v-if="windowWidth < 701"
@@ -136,9 +130,7 @@
           </div>
           <div class="btn-addData">
             <b-button @click="addItemModal" id="add" class="btn-confirm"
-              ><i class="fas fa-plus" /><span class="pl-1 text-add"
-                >ADD</span
-              ></b-button
+              ><i class="fas fa-plus" /><span class="pl-1 text-add">ADD</span></b-button
             >
             <b-tooltip
               v-if="windowWidth < 701"
@@ -189,9 +181,7 @@
           ><i class="fas fa-edit" /> EDIT
           <span class="capital-text">{{ tabActive }}</span></span
         >
-        <span class="close-icon" @click="toggleModal"
-          ><i class="fas fa-times" />
-        </span>
+        <span class="close-icon" @click="toggleModal"><i class="fas fa-times" /> </span>
       </template>
       <template>
         <b-form @submit.prevent="submit" class="form-data">
@@ -231,18 +221,24 @@
       </template>
     </b-modal>
 
-    <ModalDelete :headName="this.tabActive" :imageURL="this.dataSelect.image" @toggleModal="toggleModal" @deleteData="deleteData"/>
+    <ModalDelete
+      :headName="this.tabActive"
+      :imageURL="this.dataSelect.image"
+      @toggleModal="toggleModal"
+      @deleteData="deleteData"
+    />
   </div>
 </template>
 
 <script>
-import CardManage from "../components/cardManage.vue";
-import "../assets/scss/style.scss";
-import LoadingData from "../components/loadingData.vue";
-import Pagination from "../components/pagination.vue";
-import firebaseApp from "../firebase/firebase_app";
-import ModalDelete from '../components/modal-delete.vue'
-import updateDashboard from "../firebase/firebase_function.js"
+import "@/assets/scss/style.scss";
+import CardManage from "@/components/cardManage";
+import firebaseApp from "@/firebase/firebase_app";
+import LoadingData from "@/components/loadingData";
+import ModalDelete from "@/components/modal-delete";
+import Pagination from "@/components/pagination";
+import setupData from "@/firebase/setup-data";
+import updateDashboard from "@/firebase/firebase_function";
 
 export default {
   name: "Advanced",
@@ -251,7 +247,7 @@ export default {
       windowWidth: window.innerWidth,
       tabActive: "director",
       search: "",
-      searchValue : "",
+      searchValue: "",
       dataSelect: {},
       totalDatas: null,
       itemPerPage: 30,
@@ -267,21 +263,28 @@ export default {
     CardManage,
     LoadingData,
     Pagination,
-    ModalDelete
+    ModalDelete,
   },
   mounted() {
     window.addEventListener("resize", () => {
       this.windowWidth = window.innerWidth;
     });
   },
-
   created() {
     var tab = this.$route.params.tab;
     this.tabActive = tab
     this.loadData(tab);
-    
   },
   methods: {
+    async loadSetupData() {
+      if (this.tabActive == "genre") {
+        this.genres = await setupData.getGenreData();
+        this.$store.dispatch("setGenre", this.genres);
+      } else if (this.tabActive == "studio") {
+        this.studios = await setupData.getStudioData();
+        this.$store.dispatch("setStudio", this.studios);
+      }
+    },
     tabsActive(tab) {
       if (this.tabActive != tab) {
         this.tabActive = tab;
@@ -342,10 +345,7 @@ export default {
             })
             .catch((err) => {
               this.loading = false;
-              this.notifyAlert(
-                "error",
-                "Load " + this.tabActive + " unsuccess"
-              );
+              this.notifyAlert("error", "Load " + this.tabActive + " unsuccess");
               console.log(err);
             });
         })
@@ -388,15 +388,16 @@ export default {
       return dataRef
         .add(data)
         .then((res) => {
-          if(this.datas.length >= 30){
-            this.datas.splice(-1)
+          if (this.datas.length >= 30) {
+            this.datas.splice(-1);
           }
-          data.id = res.id
-          this.datas.unshift(data)
-          this.totalDatas = this.totalDatas + 1
+          data.id = res.id;
+          this.datas.unshift(data);
+          this.totalDatas = this.totalDatas + 1;
           this.loading = false;
-          
-          updateDashboard.addFavoriteData(this.tabActive)
+
+          this.loadSetupData() // load new genre or studio
+          updateDashboard.addFavoriteData(this.tabActive);
           this.notifyAlert("success", "Add " + this.tabActive);
         })
         .catch((err) => {
@@ -412,11 +413,12 @@ export default {
       return dataRef
         .update(data)
         .then(() => {
-          data.id = id
-          this.datas = this.datas.map(u => u.id !== data.id ? u : data);
+          data.id = id;
+          this.datas = this.datas.map((u) => (u.id !== data.id ? u : data));
           console.log(this.datas);
           this.loading = false;
 
+          this.loadSetupData() // load new genre or studio
           this.notifyAlert("success", "Edit " + this.tabActive);
         })
         .catch((err) => {
@@ -441,7 +443,7 @@ export default {
       return dataRef
         .delete()
         .then(() => {
-          updateDashboard.deleteFavoriteData(this.tabActive)
+          updateDashboard.deleteFavoriteData(this.tabActive);
           this.loadData(this.tabActive);
           this.notifyAlert("success", "Delete " + this.tabActive);
         })

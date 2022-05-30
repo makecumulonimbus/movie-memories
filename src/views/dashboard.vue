@@ -178,8 +178,8 @@
 </template>
 
 <script>
-import firebaseApp from "../firebase/firebase_app";
-import "../assets/scss/style.scss";
+import "@/assets/scss/style.scss";
+import firebaseApp from "@/firebase/firebase_app";
 
 export default {
   name: "Dashboard",
