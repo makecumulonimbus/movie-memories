@@ -145,18 +145,18 @@ input {
 .status {
   position: absolute;
   top: 3px;
-  right: 11px;
+  right: 5px;
   font-size: 10px;
   background-image: linear-gradient(255deg, #4457ff -1.09%, #5cc4ff 100%);
   margin: 4px;
   padding: 3px 6px;
   color: white;
-  border-radius: 5px 0px 0px 5px;
+  border-radius: 5px;
 }
 .rating {
   position: absolute;
   top: 3px;
-  right: 76px;
+  right: 70px;
   font-size: 10px;
   background: linear-gradient(87.48deg, #f1ffa7 -2.21%, #fbee51 101.3%) !important;
   margin: 4px;
