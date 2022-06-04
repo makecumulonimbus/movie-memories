@@ -171,7 +171,6 @@ export default {
     filterStatus(status) {
       this.statusActive = status;
       this.$emit("filterStatus", this.statusActive);
-      this.clearFilter()
     },
     filterAll() {
       this.form.searchFil = this.search;
