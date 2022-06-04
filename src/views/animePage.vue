@@ -294,8 +294,11 @@ export default {
       this.$bvModal.show("modal-delete");
     },
     filterData(data) {
-      this.statusAnime = "all";
-      this.search = "";
+      if (data.mode == "search") {
+        this.search = data.value;
+      } else {
+        this.search = "";
+      }
       this.filterMode = data.mode
       this.filterValue = data.mode != 'rating' ? data.value.toLowerCase() : data.value
       this.loadAnimes();
