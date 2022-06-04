@@ -43,7 +43,7 @@
              <b-form-group label="Actor :" class="" v-if="form.filterMode == 'actor'">
               <b-form-input
                 id="actor"
-                placeholder="Enter Actor"
+                placeholder="Enter full name"
                 size="sm"
                 v-model="form.actorSelect"
                 autocomplete="off"
