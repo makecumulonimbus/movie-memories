@@ -307,7 +307,6 @@ export default {
       this.$bvModal.show("modal-delete");
     },
     filterData(data) {
-      this.statusMovie = "all";
       if (data.mode == "search") {
         this.search = data.value;
       } else {
