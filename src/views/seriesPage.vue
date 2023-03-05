@@ -36,13 +36,6 @@
             <b-button @click="addItemModal" id="add" class="btn-confirm"
               ><i class="fas fa-plus" /><span class="pl-1 text-add">ADD</span></b-button
             >
-            <!-- <b-tooltip
-              v-if="windowWidth < 701"
-              target="add"
-              title="ADD"
-              placement="bottom"
-              class="tooltip-icon"
-            ></b-tooltip> -->
           </div>
         </div>
         <div class="row pt-2">
@@ -70,7 +63,7 @@
       <div class="noData" v-if="seriesList.length == 0">
         Series not found !
         <div class="img-nodata">
-          <img src="../assets/nodata.svg" alt="" />
+          <img src="../assets/nodata.svg" alt="no data" loading="lazy"/>
         </div>
       </div>
     </div>
@@ -113,11 +106,9 @@ export default {
   },
   data() {
     return {
-      windowWidth: window.innerWidth,
       seriesList: [],
       seriesSelect: {},
       totalDatas: null,
-      // currentPage: 0,
       itemPerPage: 30,
       itemStart: null,
       itemEnd: null,
@@ -129,11 +120,6 @@ export default {
       statusSeries: "all",
       search: "",
     };
-  },
-  mounted() {
-    window.addEventListener("resize", () => {
-      this.windowWidth = window.innerWidth;
-    });
   },
   created() {
     this.loadSeries();
@@ -147,6 +133,7 @@ export default {
     ModalAddEdit,
     DetailModal,
   },
+
   methods: {
     filterStatus(filter) {
       this.statusSeries = filter;
@@ -155,12 +142,14 @@ export default {
       this.$store.dispatch("changePage", 0);
       this.loadSeries();
     },
+
     searchValue(value) {
       this.filterMode = "";
       this.filterValue = "";
-      this.search = value;
+      this.search = value.trim();
       this.loadSeries();
     },
+
     loadSeries() {
       this.loading = true;
       let indexOf = this.itemPerPage * this.$store.state.currentP; //itemperPage = totalitem/limit
@@ -258,11 +247,12 @@ export default {
           console.log(err);
         });
     },
+
     loadMoreSeries(page) {
       this.$store.dispatch("changePage", page);
-      // this.currentPage = page;
       this.loadSeries();
     },
+
     addItemModal() {
       this.formMode = "Add";
       this.form = {
@@ -282,6 +272,7 @@ export default {
       };
       this.$bvModal.show("modal-add-edit");
     },
+
     editItemModal(data) {
       this.formMode = "Edit";
       this.seriesSelect = data;
@@ -302,11 +293,13 @@ export default {
       };
       this.$bvModal.show("modal-add-edit");
     },
+
     deleteItemModal(data) {
       this.formMode = "Delete";
       this.seriesSelect = data;
       this.$bvModal.show("modal-delete");
     },
+
     filterData(data) {
       if (data.mode == "search") {
         this.search = data.value;
@@ -317,11 +310,13 @@ export default {
       this.filterValue = data.mode != 'rating' ? data.value.toLowerCase() : data.value
       this.loadSeries();
     },
+
     actorsLowercase(actors) {
       return actors.map((ele) => {
         return (ele = ele.trim().toLowerCase());
       });
     },
+
     submit() {
       if (this.formMode == "Add") {
         var setData = {
@@ -364,6 +359,7 @@ export default {
       }
       this.$bvModal.hide("modal-add-edit");
     },
+    
     addSeries(data) {
       this.loading = true;
       const seriesRef = firebaseApp.firestore().collection("series");
@@ -387,6 +383,7 @@ export default {
           console.log(err);
         });
     },
+
     editSeries(data) {
       this.loading = true;
       const id = this.seriesSelect.id;
@@ -412,6 +409,7 @@ export default {
           console.log(err);
         });
     },
+
     deleteSeries() {
       this.loading = true;
       const id = this.seriesSelect.id;
@@ -430,11 +428,7 @@ export default {
           console.log(err);
         });
     },
-    toggleModal() {
-      this.$bvModal.hide("modal-add-edit");
-      this.$bvModal.hide("modal-delete");
-      this.$bvModal.hide("modal-detail");
-    },
+
     detailPage(data) {
       this.seriesSelect = data;
       this.form = {
@@ -454,8 +448,8 @@ export default {
         createAt: this.seriesSelect.createAt,
       };
       this.$bvModal.show("modal-detail");
-      // this.$router.push("/series/" + data.id);
     },
+
     notifyAlert(type, text) {
       if (type == "success") {
         this.$toast.success(text, {
@@ -475,6 +469,13 @@ export default {
         });
       }
     },
+
+    toggleModal() {
+      this.$bvModal.hide("modal-add-edit");
+      this.$bvModal.hide("modal-delete");
+      this.$bvModal.hide("modal-detail");
+    },
+    
   },
 };
 </script>

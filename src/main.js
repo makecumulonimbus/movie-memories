@@ -11,7 +11,10 @@ import router from './router/index';
 import store from './vuex/store'
 import Toast from "vue-toastification";
 import Vue from 'vue'
+import PerfectScrollbar from 'vue2-perfect-scrollbar'
+import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'
 
+Vue.use(PerfectScrollbar)
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);

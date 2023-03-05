@@ -104,7 +104,7 @@ export default {
     },
     formatDate(date) {
       var time = date.toDate();
-      var formatTimeShow = moment(time).format("DD-MM-YYYY HH:mm");
+      var formatTimeShow = moment(time).format("DD-MM-YYYY");
       return formatTimeShow;
     },
   },

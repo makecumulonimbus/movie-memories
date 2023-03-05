@@ -1,7 +1,7 @@
 <template>
   <div class="loading-icon">
     <div>
-      <img src="../assets/logo.png" alt="" class="img-icon" />
+      <img src="../assets/logo.png" alt="" class="img-icon" loading="lazy"/>
       <p class="pt-4 load-text">LOADING</p>
     </div>
   </div>

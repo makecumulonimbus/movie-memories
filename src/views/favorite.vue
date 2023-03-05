@@ -166,7 +166,7 @@
       <div class="noData" v-if="datas.length == 0">
         <span class="first-cap">{{ tabActive }}</span> not found !
         <div class="img-nodata">
-          <img src="../assets/nodata.svg" alt="" />
+          <img src="../assets/nodata.svg" alt="" loading="lazy"/>
         </div>
       </div>
     </div>
@@ -275,6 +275,7 @@ export default {
     this.tabActive = tab
     this.loadData(tab);
   },
+
   methods: {
     async loadSetupData() {
       if (this.tabActive == "genre") {
@@ -285,6 +286,7 @@ export default {
         this.$store.dispatch("setStudio", this.studios);
       }
     },
+
     tabsActive(tab) {
       if (this.tabActive != tab) {
         this.tabActive = tab;
@@ -292,6 +294,7 @@ export default {
         this.loadData(tab);
       }
     },
+
     loadData(tab) {
       this.loading = true;
       let indexOf = this.itemPerPage * this.$store.state.currentP; //itemperPage = totalitem/limit
@@ -355,17 +358,21 @@ export default {
           console.log(err);
         });
     },
+
     searchData() {
       this.search = this.searchValue.trim().toLowerCase();
       this.loadData(this.tabActive);
     },
+
     loadMore() {
       this.loadData(this.tabActive);
     },
+
     toggleModal() {
       this.$bvModal.hide("modal-data");
       this.$bvModal.hide("modal-delete");
     },
+
     submit() {
       if (this.formMode == "Add") {
         var setData = {
@@ -382,6 +389,7 @@ export default {
       }
       this.$bvModal.hide("modal-data");
     },
+
     addData(data) {
       this.loading = true;
       const dataRef = firebaseApp.firestore().collection(this.tabActive);
@@ -406,6 +414,7 @@ export default {
           console.log(err);
         });
     },
+
     editData(data) {
       this.loading = true;
       const id = this.dataSelect.id;
@@ -427,6 +436,7 @@ export default {
           console.log(err);
         });
     },
+    
     addItemModal() {
       this.formMode = "Add";
       this.form = {
@@ -435,6 +445,7 @@ export default {
       };
       this.$bvModal.show("modal-data");
     },
+
     deleteData() {
       this.loading = true;
       const id = this.dataSelect.id;
@@ -453,11 +464,13 @@ export default {
           console.log(err);
         });
     },
+
     deleteItemModal(data) {
       this.formMode = "Delete";
       this.dataSelect = data;
       this.$bvModal.show("modal-delete");
     },
+
     editItemModal(data) {
       this.formMode = "Edit";
       this.dataSelect = data;
@@ -467,7 +480,7 @@ export default {
       };
       this.$bvModal.show("modal-data");
     },
-    detailPage() {},
+
     notifyAlert(type, text) {
       if (type == "success") {
         this.$toast.success(text, {

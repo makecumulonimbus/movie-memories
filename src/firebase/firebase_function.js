@@ -3,7 +3,6 @@ import firebaseApp from "./firebase_app.js"
 const dashboardRef = firebaseApp.firestore().doc("dashboard/tD4U01fWZfmfrh4eSFIv")
 
 var updateDashboard = {
-    //Main Page
     addMainData(datas, type) {
         dashboardRef.get().then(querySnap => {
             if (type == 'movie') {
@@ -28,6 +27,7 @@ var updateDashboard = {
             }
         })
     },
+
     editMainData(oldData, datas, type) {
         dashboardRef.get().then(querySnap => {
             if (type == 'movie') {
@@ -73,6 +73,7 @@ var updateDashboard = {
             }
         })
     },
+
     deleteMainData(datas, type) {
         dashboardRef.get().then(querySnap => {
             if (type == 'movie') {
@@ -98,7 +99,6 @@ var updateDashboard = {
         })
     },
 
-    //Favorite Page
     addFavoriteData(type) {
         dashboardRef.get().then(querySnap => {
             var advancedRef = querySnap.data().advance
@@ -110,6 +110,7 @@ var updateDashboard = {
                 })
         })
     },
+    
     deleteFavoriteData(type) {
         dashboardRef.get().then(querySnap => {
             var advancedRef = querySnap.data().advance

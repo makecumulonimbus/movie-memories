@@ -9,7 +9,9 @@
         ><i class="fas fa-edit" /> EDIT
         <span class="capital-text">{{ headName }}</span></span
       >
-      <span class="close-icon" @click="toggleModal"><i class="fas fa-times" /> </span>
+      <span class="close-icon" @click="toggleModal"
+        ><i class="fas fa-times" />
+      </span>
     </template>
     <template>
       <b-form @submit.prevent="submit" class="form-data">
@@ -20,7 +22,6 @@
                 id="title"
                 v-model="form.title"
                 required
-                placeholder="Enter title"
                 size="sm"
                 autocomplete="off"
               ></b-form-input>
@@ -31,7 +32,6 @@
               <b-form-input
                 id="sequel"
                 v-model="form.sequel"
-                placeholder="Enter sequel"
                 type="number"
                 min="0"
                 size="sm"
@@ -44,7 +44,6 @@
               <b-form-input
                 id="season"
                 v-model="form.season"
-                placeholder="Enter season"
                 type="number"
                 min="0"
                 size="sm"
@@ -57,7 +56,6 @@
               <b-form-input
                 id="episode"
                 v-model="form.episode"
-                placeholder="Enter episode"
                 size="sm"
                 autocomplete="off"
               ></b-form-input>
@@ -71,7 +69,6 @@
               <b-form-input
                 id="year"
                 v-model="form.year"
-                placeholder="Enter year"
                 type="number"
                 min="0"
                 size="sm"
@@ -108,7 +105,6 @@
                 v-model="form.status"
                 :options="status"
                 required
-                placeholder="Enter status"
                 size="sm"
                 autocomplete="off"
               ></b-form-select>
@@ -122,7 +118,6 @@
               <b-form-input
                 id="director"
                 v-model="form.director"
-                placeholder="Enter director"
                 size="sm"
                 autocomplete="off"
               ></b-form-input>
@@ -140,9 +135,9 @@
               <b-form-tags
                 id="actot"
                 v-model="form.actor"
-                placeholder="Enter full name"
                 size="sm"
                 autocomplete="off"
+                placeholder=""
               ></b-form-tags>
             </b-form-group>
           </div>
@@ -150,22 +145,22 @@
 
         <div class="row">
           <div class="col-lg-6 col-md-6">
-            <b-form-group label="imageURL :" class="">
+            <b-form-group label="Image :" class="">
               <b-form-input
                 id="input-3"
                 v-model="form.imageURL"
-                placeholder="Enter imageURL"
+                placeholder="Image URL"
                 size="sm"
                 autocomplete="off"
               ></b-form-input>
             </b-form-group>
           </div>
           <div class="col-lg-6 col-md-6">
-            <b-form-group label="trailerURL :" class="">
+            <b-form-group label="Trailer :" class="">
               <b-form-input
                 id="trailerURL"
                 v-model="form.trailerURL"
-                placeholder="Enter youtube id"
+                placeholder="Youtube ID"
                 size="sm"
                 autocomplete="off"
               ></b-form-input>
@@ -179,7 +174,6 @@
               <b-form-textarea
                 id="detail"
                 v-model="form.detail"
-                placeholder="Enter detail"
                 rows="3"
                 max-rows="6"
                 autocomplete="off"
@@ -227,6 +221,7 @@ export default {
       directors: [],
       selectedDirec: null,
       status: [
+        { value: "", text: "" },
         { value: "watched", text: "Watched" },
         { value: "wanted", text: "Wanted" },
       ],

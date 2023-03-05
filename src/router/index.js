@@ -1,7 +1,6 @@
 import firebase from 'firebase';
 import Vue from 'vue';
 import VueRouter from 'vue-router'
-
 import Main from '@/views/main'
 import MoviePage from '@/views/moviePage';
 import SeriesPage from '@/views/seriesPage'

@@ -288,6 +288,7 @@ export default {
           console.log(err);
         });
     },
+
     filterStatus(status) {
       this.statusActive = status;
       if(this.statusActive == 'movie'){
@@ -304,6 +305,7 @@ export default {
         this.showStatus.wanted = this.allStatusCount.wanted
       }
     },
+    
     piechartData(){
       this.dataPie.map((data) =>{
         if(data.name == 'Movie'){

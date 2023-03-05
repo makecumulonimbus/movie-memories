@@ -11,7 +11,7 @@
       </template>
       <template>
         <div class="text-center" v-if="imageURL">
-          <img :src="imageURL" width="120px" class="img-del" />
+          <img :src="imageURL" width="120px" class="img-del" loading="lazy" alt=""/>
         </div>
         <div class="text-center text-del">
           Are you sure you want to delete this {{ headName }} ?

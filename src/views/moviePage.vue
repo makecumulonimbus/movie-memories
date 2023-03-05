@@ -37,13 +37,6 @@
             <b-button @click="addItemModal" id="add" class="btn-confirm"
               ><i class="fas fa-plus" /><span class="pl-1 text-add">ADD</span></b-button
             >
-            <!-- <b-tooltip
-              v-if="windowWidth < 701"
-              target="add"
-              title="ADD"
-              placement="bottom"
-              class="tooltip-icon"
-            ></b-tooltip> -->
           </div>
         </div>
 
@@ -71,7 +64,7 @@
       <div class="noData" v-if="movieList.length == 0">
         Movie not found !
         <div class="img-nodata">
-          <img src="../assets/nodata.svg" alt="" />
+          <img src="../assets/nodata.svg" alt="no data" loading="lazy"/>
         </div>
       </div>
     </div>
@@ -123,11 +116,9 @@ export default {
   },
   data() {
     return {
-      windowWidth: window.innerWidth,
       movieList: [],
       movieSelect: {},
       totalDatas: null,
-      // currentPage: 0,
       itemPerPage: 30,
       itemStart: null,
       itemEnd: null,
@@ -140,14 +131,10 @@ export default {
       search: "",
     };
   },
-  mounted() {
-    window.addEventListener("resize", () => {
-      this.windowWidth = window.innerWidth;
-    });
-  },
   created() {
     this.loadMovies();
   },
+
   methods: {
     filterStatus(filter) {
       this.statusMovie = filter;
@@ -156,12 +143,14 @@ export default {
       this.$store.dispatch("changePage", 0);
       this.loadMovies();
     },
+
     searchValue(value) {
       this.filterMode = "";
       this.filterValue = "";
-      this.search = value;
+      this.search = value.trim();
       this.loadMovies();
     },
+
     loadMovies() {
       this.loading = true;
       let indexOf = this.itemPerPage * this.$store.state.currentP; //itemperPage = totalitem/limit
@@ -258,9 +247,9 @@ export default {
           console.log(err);
         });
     },
+
     loadMoreMovie(page) {
       this.$store.dispatch("changePage", page);
-      // this.currentPage = page;
       this.loadMovies();
     },
 
@@ -282,6 +271,7 @@ export default {
       };
       this.$bvModal.show("modal-add-edit");
     },
+
     editItemModal(data) {
       this.formMode = "Edit";
       this.movieSelect = data;
@@ -301,11 +291,13 @@ export default {
       };
       this.$bvModal.show("modal-add-edit");
     },
+
     deleteItemModal(data) {
       this.formMode = "Delete";
       this.movieSelect = data;
       this.$bvModal.show("modal-delete");
     },
+
     filterData(data) {
       if (data.mode == "search") {
         this.search = data.value;
@@ -316,11 +308,13 @@ export default {
       this.filterValue = data.mode != "rating" ? data.value.toLowerCase() : data.value;
       this.loadMovies();
     },
+
     actorsLowercase(actors) {
       return actors.map((ele) => {
         return (ele = ele.trim().toLowerCase());
       });
     },
+
     submit() {
       if (this.formMode == "Add") {
         var setData = {
@@ -360,6 +354,7 @@ export default {
       }
       this.$bvModal.hide("modal-add-edit");
     },
+
     addMovie(data) {
       this.loading = true;
       const movieRef = firebaseApp.firestore().collection("movie");
@@ -383,6 +378,7 @@ export default {
           console.log(err);
         });
     },
+
     editMovie(data) {
       this.loading = true;
       const id = this.movieSelect.id;
@@ -408,6 +404,7 @@ export default {
           console.log(err);
         });
     },
+
     deleteMovie() {
       this.loading = true;
       const id = this.movieSelect.id;
@@ -426,11 +423,7 @@ export default {
           console.log(err);
         });
     },
-    toggleModal() {
-      this.$bvModal.hide("modal-add-edit");
-      this.$bvModal.hide("modal-delete");
-      this.$bvModal.hide("modal-detail");
-    },
+
     detailPage(data) {
       this.movieSelect = data;
       this.form = {
@@ -449,8 +442,8 @@ export default {
         createAt: this.movieSelect.createAt,
       };
       this.$bvModal.show("modal-detail");
-      // this.$router.push("/movie/" + data.id);
     },
+
     notifyAlert(type, text) {
       if (type == "success") {
         this.$toast.success(text, {
@@ -469,6 +462,12 @@ export default {
           icon: "fa fa-exclamation-triangle",
         });
       }
+    },
+
+    toggleModal() {
+      this.$bvModal.hide("modal-add-edit");
+      this.$bvModal.hide("modal-delete");
+      this.$bvModal.hide("modal-detail");
     },
   },
 };
@@ -542,14 +541,8 @@ button:focus {
   outline: unset !important;
 }
 
-.b-form-tags.focus {
-  border-color: #7d68ff !important;
-  box-shadow: unset !important;
-}
-.badge-secondary {
-  color: white !important;
-  background-color: #7d68ff !important;
-}
+
+
 .vue-notification.success {
   background: #baffb1 !important;
   border-left: 5px solid #1dce63 !important;

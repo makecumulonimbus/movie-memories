@@ -9,7 +9,7 @@
         :class="checkPath($route.name)"
       >
         <b-navbar-brand @click="changePath('/movie')" class="name-navbar">
-          <img src="../assets/logo.png" alt="logo" class="logo-baner" />
+          <img src="../assets/logo.png" alt="logo" class="logo-baner" loading="lazy"/>
           <span class="text-logo-nav">MOVIE MEMORIES</span>
         </b-navbar-brand>
         <b-navbar-toggle target="sidebar-right"></b-navbar-toggle>
@@ -70,7 +70,9 @@
                     'none-active': $route.name != 'Dashboard',
                   }"
                 >
-                  <i class="fas fa-chart-bar" /><span class="pl-2">Dashboard</span>
+                  <i class="fas fa-chart-bar" /><span class="pl-2"
+                    >Dashboard</span
+                  >
                 </div>
                 <div
                   class="p-2 advanced list-menu"
@@ -80,7 +82,9 @@
                     'none-active': $route.name != 'Favorite',
                   }"
                 >
-                  <i class="fas fa-bookmark" /><span class="pl-2">Favorite</span>
+                  <i class="fas fa-bookmark" /><span class="pl-2"
+                    >Favorite</span
+                  >
                 </div>
 
                 <div
@@ -91,14 +95,16 @@
                     'none-active': $route.name != 'Changelog',
                   }"
                 >
-                  <i class="fas fa-info-circle" /><span class="pl-2">Change log</span>
+                  <i class="fas fa-info-circle" /><span class="pl-2"
+                    >Change log</span
+                  >
                 </div>
               </div>
             </b-collapse>
           </div>
           <template #footer>
             <div class="img-sidebar-menu text-center mb-3">
-              <img src="../assets/sidebar_undrow.svg" width="120px" />
+              <img src="../assets/sidebar_undrow.svg" width="120px" loading="lazy" alt=""/>
             </div>
             <div
               class="bg-dark text-light align-items-center px-3 py-2 text-center pointer menu-footer"
@@ -184,12 +190,16 @@
 
       <b-modal id="modal-exit" title="LOGOUT" hide-footer>
         <template #modal-header>
-          <span class="modal-header-text"><i class="fas fa-sign-out-alt" /> LOGOUT</span>
-          <span class="close-icon" @click="toggleModal"><i class="fas fa-times" /> </span>
+          <span class="modal-header-text"
+            ><i class="fas fa-sign-out-alt" /> LOGOUT</span
+          >
+          <span class="close-icon" @click="toggleModal"
+            ><i class="fas fa-times" />
+          </span>
         </template>
         <template>
           <div class="text-center">
-            <img src="../assets/exit.svg" width="200px" />
+            <img src="../assets/exit.svg" width="200px" loading="lazy" alt=""/>
           </div>
           <div class="text-center text-alart-modal">
             Are you sure you want to logout ?
@@ -257,10 +267,11 @@ export default {
             this.loading = false;
             this.notifyAlert("success", "Logout");
             this.$router.replace("login");
-          }).catch(err=>{
+          })
+          .catch((err) => {
             console.log(err);
             this.notifyAlert("error", "Logout unsuccess");
-          })
+          });
       }, 1000);
     },
     notifyAlert(type, text) {
@@ -287,6 +298,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.div-nav-bar {
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  margin-top: -70px;
+}
+
 .navbar-brand {
   padding-top: 8px;
   margin-right: 0rem !important;
@@ -347,7 +365,7 @@ export default {
 //left Nav
 .logo-baner {
   margin-top: -7px;
-  width: 45px;
+  width: 40px;
   margin-left: 0.5rem;
   margin-right: 1rem;
   transition: 0.3s;

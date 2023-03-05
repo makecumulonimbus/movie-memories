@@ -10,6 +10,7 @@
               alt=""
               class="img-undraw pb-4"
               width="250px"
+              loading="lazy"
             />
             <div class="input-field">
               <div class="icon"><i class="fas fa-envelope"></i></div>
@@ -37,7 +38,7 @@
       <div class="panels-container">
         <div class="panel left-panel">
           <div class="content">
-            <img src="../assets/logo.png" />
+            <img src="../assets/logo.png" alt="" loading="lazy"/>
             <div class="pt-4 logo-text">MOVIE</div>
             <div class="logo-text sub-text">MEMORIES</div>
           </div>
@@ -84,6 +85,7 @@ export default {
           }
         });
     },
+    
     notifyAlert(type, text) {
       if (type == "success") {
         this.$toast(text, {
@@ -111,7 +113,7 @@ export default {
 .container {
   position: relative;
   width: 100%;
-  background-color: #fff;
+  background-color: #fafafa;
   min-height: 100vh;
   overflow: hidden;
   padding-right: 0px !important;

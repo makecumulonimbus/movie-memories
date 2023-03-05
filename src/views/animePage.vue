@@ -37,13 +37,6 @@
             <b-button @click="addItemModal" id="add" class="btn-confirm"
               ><i class="fas fa-plus" /><span class="pl-1 text-add">ADD</span></b-button
             >
-            <!-- <b-tooltip
-              v-if="windowWidth < 701"
-              target="add"
-              title="ADD"
-              placement="bottom"
-              class="tooltip-icon"
-            ></b-tooltip> -->
           </div>
         </div>
         <div class="row pt-2">
@@ -71,7 +64,7 @@
       <div class="noData" v-if="animeList.length == 0">
         Anime not found !
         <div class="img-nodata">
-          <img src="../assets/nodata.svg" alt="" />
+          <img src="../assets/nodata.svg" alt="" loading="lazy"/>
         </div>
       </div>
     </div>
@@ -114,11 +107,9 @@ export default {
   },
   data() {
     return {
-      windowWidth: window.innerWidth,
       animeList: [],
       animeSelect: {},
       totalDatas: null,
-      // currentPage: 0,
       itemPerPage: 30,
       itemStart: null,
       itemEnd: null,
@@ -130,11 +121,6 @@ export default {
       statusAnime: "all",
       search: "",
     };
-  },
-  mounted() {
-    window.addEventListener("resize", () => {
-      this.windowWidth = window.innerWidth;
-    });
   },
   created() {
     this.loadAnimes();
@@ -148,6 +134,7 @@ export default {
     ModalDelete,
     DetailModal,
   },
+
   methods: {
     filterStatus(filter) {
       this.statusAnime = filter;
@@ -156,12 +143,14 @@ export default {
       this.$store.dispatch("changePage", 0);
       this.loadAnimes();
     },
+
     searchValue(value) {
       this.filterMode = "";
       this.filterValue = "";
-      this.search = value;
+      this.search = value.trim();
       this.loadAnimes();
     },
+
     loadAnimes() {
       this.loading = true;
       let indexOf = this.itemPerPage * this.$store.state.currentP; //itemperPage = totalitem/limit
@@ -248,11 +237,12 @@ export default {
           console.log(err);
         });
     },
+
     loadMoreAnime(page) {
       this.$store.dispatch("changePage", page);
-      // this.currentPage = page;
       this.loadAnimes();
     },
+
     addItemModal() {
       this.formMode = "Add";
       this.form = {
@@ -270,6 +260,7 @@ export default {
       };
       this.$bvModal.show("modal-add-edit");
     },
+
     editItemModal(data) {
       this.formMode = "Edit";
       this.animeSelect = data;
@@ -288,11 +279,13 @@ export default {
       };
       this.$bvModal.show("modal-add-edit");
     },
+
     deleteItemModal(data) {
       this.formMode = "Delete";
       this.animeSelect = data;
       this.$bvModal.show("modal-delete");
     },
+
     filterData(data) {
       if (data.mode == "search") {
         this.search = data.value;
@@ -303,6 +296,7 @@ export default {
       this.filterValue = data.mode != 'rating' ? data.value.toLowerCase() : data.value
       this.loadAnimes();
     },
+
     submit() {
       if (this.formMode == "Add") {
         var setData = {
@@ -340,6 +334,7 @@ export default {
       }
       this.$bvModal.hide("modal-add-edit");
     },
+
     addAnime(data) {
       this.loading = true;
       const animeRef = firebaseApp.firestore().collection("anime");
@@ -363,6 +358,7 @@ export default {
           console.log(err);
         });
     },
+
     editAnime(data) {
       this.loading = true;
       const id = this.animeSelect.id;
@@ -388,6 +384,7 @@ export default {
           console.log(err);
         });
     },
+
     deleteAnime() {
       this.loading = true;
       const id = this.animeSelect.id;
@@ -406,11 +403,7 @@ export default {
           console.log(err);
         });
     },
-    toggleModal() {
-      this.$bvModal.hide("modal-add-edit");
-      this.$bvModal.hide("modal-delete");
-      this.$bvModal.hide("modal-detail");
-    },
+
     detailPage(data) {
       this.animeSelect = data;
       this.form = {
@@ -428,8 +421,8 @@ export default {
         createAt: this.animeSelect.createAt,
       };
       this.$bvModal.show("modal-detail");
-      // this.$router.push("/anime/" + data.id);
     },
+
     notifyAlert(type, text) {
       if (type == "success") {
         this.$toast.success(text, {
@@ -448,6 +441,12 @@ export default {
           icon: "fa fa-exclamation-triangle",
         });
       }
+    },
+
+    toggleModal() {
+      this.$bvModal.hide("modal-add-edit");
+      this.$bvModal.hide("modal-delete");
+      this.$bvModal.hide("modal-detail");
     },
   },
 };
