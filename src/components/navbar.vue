@@ -1,215 +1,233 @@
 <template>
   <div>
     <LoadingComponent v-if="loading" />
-    <div class="div-nav-bar">
-      <b-navbar
-        toggleable="lg"
-        type="dark"
-        class="bg-navbar"
-        :class="checkPath($route.name)"
-      >
-        <b-navbar-brand @click="changePath('/movie')" class="name-navbar">
-          <img src="../assets/logo.png" alt="logo" class="logo-baner" loading="lazy"/>
-          <span class="text-logo-nav">MOVIE MEMORIES</span>
-        </b-navbar-brand>
-        <b-navbar-toggle target="sidebar-right"></b-navbar-toggle>
+    <div class="div-nav-bar bg-navbar" :class="checkPath($route.name)">
+      <div class="row justify-content-center">
+        <div class="col-12 col-xl-11 px-0">
+          <b-navbar toggleable="lg" type="dark" class="">
+            <b-navbar-brand @click="changePath('/movie')" class="name-navbar">
+              <img
+                src="../assets/logo.png"
+                alt="logo"
+                class="logo-baner"
+                loading="lazy"
+              />
+              <span class="text-logo-nav">MOVIE MEMORIES</span>
+            </b-navbar-brand>
+            <b-navbar-toggle target="sidebar-right"></b-navbar-toggle>
 
-        <b-sidebar
-          id="sidebar-right"
-          title="MENU"
-          right
-          shadow
-          backdrop-variant="dark"
-          backdrop
-        >
-          <div class="px-3 py-2">
-            <div class="menu-main text-center">
-              <div
-                class="p-2 movie list-menu"
-                @click="changePath('/movie')"
-                v-bind:class="{
-                  active: $route.name == 'Movie',
-                  'none-active': $route.name != 'Movie',
-                }"
-              >
-                <i class="fas fa-film" /><span class="pl-2">MOVIE</span>
-              </div>
-              <div
-                class="p-2 series list-menu"
-                @click="changePath('/series')"
-                v-bind:class="{
-                  active: $route.name == 'Series',
-                  'none-active': $route.name != 'Series',
-                }"
-              >
-                <i class="fas fa-play-circle" /><span class="pl-2">SERIES</span>
-              </div>
-              <div
-                class="p-2 anime list-menu"
-                @click="changePath('/anime')"
-                v-bind:class="{
-                  active: $route.name == 'Anime',
-                  'none-active': $route.name != 'Anime',
-                }"
-              >
-                <i class="fas fa-video" /><span class="pl-2">ANIME</span>
-              </div>
-            </div>
-            <hr />
-            <div class="menu-advanced" v-b-toggle.collapse-1>
-              <div>ADVANCED</div>
-              <div><i class="fas fa-caret-up" /></div>
-            </div>
-            <b-collapse id="collapse-1" class="mt-2">
-              <div class="list-advanced">
-                <div
-                  class="p-2 advanced list-menu"
-                  @click="changePath('/dashboard')"
-                  v-bind:class="{
-                    active: $route.name == 'Dashboard',
-                    'none-active': $route.name != 'Dashboard',
-                  }"
-                >
-                  <i class="fas fa-chart-bar" /><span class="pl-2"
-                    >Dashboard</span
-                  >
-                </div>
-                <div
-                  class="p-2 advanced list-menu"
-                  @click="changePath('/favorite/director')"
-                  v-bind:class="{
-                    active: $route.name == 'Favorite',
-                    'none-active': $route.name != 'Favorite',
-                  }"
-                >
-                  <i class="fas fa-bookmark" /><span class="pl-2"
-                    >Favorite</span
-                  >
-                </div>
-
-                <div
-                  class="p-2 advanced list-menu"
-                  @click="changePath('/changelog')"
-                  v-bind:class="{
-                    active: $route.name == 'Changelog',
-                    'none-active': $route.name != 'Changelog',
-                  }"
-                >
-                  <i class="fas fa-info-circle" /><span class="pl-2"
-                    >Change log</span
-                  >
-                </div>
-              </div>
-            </b-collapse>
-          </div>
-          <template #footer>
-            <div class="img-sidebar-menu text-center mb-3">
-              <img src="../assets/sidebar_undrow.svg" width="120px" loading="lazy" alt=""/>
-            </div>
-            <div
-              class="bg-dark text-light align-items-center px-3 py-2 text-center pointer menu-footer"
-              @click="openModal"
-            >
-              <i class="fas fa-sign-out-alt" />
-              <span class="pl-1">LOGOUT</span>
-            </div>
-          </template>
-        </b-sidebar>
-
-        <b-collapse id="nav-collapse" is-nav>
-          <b-navbar-nav class="ml-auto">
-            <ul class="navbar-nav bd-navbar-nav flex-row">
-              <li class="nav-item nav-center">
-                <b-button
-                  class="linkURL"
-                  @click="changePath('/movie')"
-                  v-bind:class="{
-                    active: $route.name == 'Movie',
-                    'none-active': $route.name != 'Movie',
-                  }"
-                >
-                  <span class="text-listMenu">MOVIE</span>
-                </b-button>
-              </li>
-              <li class="nav-item nav-center">
-                <b-button
-                  class="linkURL"
-                  @click="changePath('/series')"
-                  v-bind:class="{
-                    active: $route.name == 'Series',
-                    'none-active': $route.name != 'Series',
-                  }"
-                >
-                  <span class="text-listMenu">SERIES</span>
-                </b-button>
-              </li>
-              <li class="nav-item nav-center">
-                <b-button
-                  class="linkURL"
-                  @click="changePath('/anime')"
-                  v-bind:class="{
-                    active: $route.name == 'Anime',
-                    'none-active': $route.name != 'Anime',
-                  }"
-                >
-                  <span class="text-listMenu">ANIME</span>
-                </b-button>
-              </li>
-            </ul>
-
-            <b-nav-item-dropdown
+            <b-sidebar
+              id="sidebar-right"
+              title="MENU"
               right
-              class="menu-right"
-              :class="checkPath($route.name)"
-              no-caret
+              shadow
+              backdrop-variant="dark"
+              backdrop
             >
-              <template #button-content>
-                <i class="fa fa-ellipsis-v" />
+              <div class="px-3 py-2">
+                <div class="menu-main text-center">
+                  <div
+                    class="p-2 movie list-menu"
+                    @click="changePath('/movie')"
+                    v-bind:class="{
+                      active: $route.name == 'Movie',
+                      'none-active': $route.name != 'Movie',
+                    }"
+                  >
+                    <i class="fas fa-film" /><span class="pl-2">MOVIE</span>
+                  </div>
+                  <div
+                    class="p-2 series list-menu"
+                    @click="changePath('/series')"
+                    v-bind:class="{
+                      active: $route.name == 'Series',
+                      'none-active': $route.name != 'Series',
+                    }"
+                  >
+                    <i class="fas fa-play-circle" /><span class="pl-2"
+                      >SERIES</span
+                    >
+                  </div>
+                  <div
+                    class="p-2 anime list-menu"
+                    @click="changePath('/anime')"
+                    v-bind:class="{
+                      active: $route.name == 'Anime',
+                      'none-active': $route.name != 'Anime',
+                    }"
+                  >
+                    <i class="fas fa-video" /><span class="pl-2">ANIME</span>
+                  </div>
+                </div>
+                <hr />
+                <div class="menu-advanced" v-b-toggle.collapse-1>
+                  <div>ADVANCED</div>
+                  <div><i class="fas fa-caret-up" /></div>
+                </div>
+                <b-collapse id="collapse-1" class="mt-2">
+                  <div class="list-advanced">
+                    <div
+                      class="p-2 advanced list-menu"
+                      @click="changePath('/dashboard')"
+                      v-bind:class="{
+                        active: $route.name == 'Dashboard',
+                        'none-active': $route.name != 'Dashboard',
+                      }"
+                    >
+                      <i class="fas fa-chart-bar" /><span class="pl-2"
+                        >Dashboard</span
+                      >
+                    </div>
+                    <div
+                      class="p-2 advanced list-menu"
+                      @click="changePath('/favorite/director')"
+                      v-bind:class="{
+                        active: $route.name == 'Favorite',
+                        'none-active': $route.name != 'Favorite',
+                      }"
+                    >
+                      <i class="fas fa-bookmark" /><span class="pl-2"
+                        >Favorite</span
+                      >
+                    </div>
+
+                    <div
+                      class="p-2 advanced list-menu"
+                      @click="changePath('/changelog')"
+                      v-bind:class="{
+                        active: $route.name == 'Changelog',
+                        'none-active': $route.name != 'Changelog',
+                      }"
+                    >
+                      <i class="fas fa-info-circle" /><span class="pl-2"
+                        >Change log</span
+                      >
+                    </div>
+                  </div>
+                </b-collapse>
+              </div>
+              <template #footer>
+                <div class="img-sidebar-menu text-center mb-3">
+                  <img
+                    src="../assets/sidebar_undrow.svg"
+                    width="120px"
+                    loading="lazy"
+                    alt=""
+                  />
+                </div>
+                <div
+                  class="bg-dark text-light align-items-center px-3 py-2 text-center pointer menu-footer"
+                  @click="openModal"
+                >
+                  <i class="fas fa-sign-out-alt" />
+                  <span class="pl-1">LOGOUT</span>
+                </div>
               </template>
+            </b-sidebar>
 
-              <b-dropdown-item to="/dashboard">
-                <i class="fas fa-chart-bar" />
-                <span>Dashboard</span></b-dropdown-item
-              >
-              <b-dropdown-item to="/favorite/director">
-                <i class="fas fa-bookmark" />
-                <span>Favorite</span></b-dropdown-item
-              >
-              <b-dropdown-item to="/changelog">
-                <i class="fas fa-info-circle" />
-                <span>Change log</span></b-dropdown-item
-              >
-              <b-dropdown-item href="#" @click="openModal">
-                <i class="fas fa-sign-out-alt" />
-                <span>Logout</span>
-              </b-dropdown-item>
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
-        </b-collapse>
-      </b-navbar>
+            <b-collapse id="nav-collapse" is-nav>
+              <b-navbar-nav class="ml-auto">
+                <ul class="navbar-nav bd-navbar-nav flex-row">
+                  <li class="nav-item nav-center">
+                    <b-button
+                      class="linkURL"
+                      @click="changePath('/movie')"
+                      v-bind:class="{
+                        active: $route.name == 'Movie',
+                        'none-active': $route.name != 'Movie',
+                      }"
+                    >
+                      <span class="text-listMenu">MOVIE</span>
+                    </b-button>
+                  </li>
+                  <li class="nav-item nav-center">
+                    <b-button
+                      class="linkURL"
+                      @click="changePath('/series')"
+                      v-bind:class="{
+                        active: $route.name == 'Series',
+                        'none-active': $route.name != 'Series',
+                      }"
+                    >
+                      <span class="text-listMenu">SERIES</span>
+                    </b-button>
+                  </li>
+                  <li class="nav-item nav-center">
+                    <b-button
+                      class="linkURL"
+                      @click="changePath('/anime')"
+                      v-bind:class="{
+                        active: $route.name == 'Anime',
+                        'none-active': $route.name != 'Anime',
+                      }"
+                    >
+                      <span class="text-listMenu">ANIME</span>
+                    </b-button>
+                  </li>
+                </ul>
 
-      <b-modal id="modal-exit" title="LOGOUT" hide-footer>
-        <template #modal-header>
-          <span class="modal-header-text"
-            ><i class="fas fa-sign-out-alt" /> LOGOUT</span
-          >
-          <span class="close-icon" @click="toggleModal"
-            ><i class="fas fa-times" />
-          </span>
-        </template>
-        <template>
-          <div class="text-center">
-            <img src="../assets/exit.svg" width="200px" loading="lazy" alt=""/>
-          </div>
-          <div class="text-center text-alart-modal">
-            Are you sure you want to logout ?
-          </div>
-          <div class="btn-delete">
-            <b-button @click="logout" class="btn-confirm">LOGOUT</b-button>
-            <b-button @click="toggleModal" class="btn-cancle">CANCLE</b-button>
-          </div>
-        </template>
-      </b-modal>
+                <b-nav-item-dropdown
+                  right
+                  class="menu-right"
+                  :class="checkPath($route.name)"
+                  no-caret
+                >
+                  <template #button-content>
+                    <i class="fa fa-ellipsis-v" />
+                  </template>
+
+                  <b-dropdown-item to="/dashboard">
+                    <i class="fas fa-chart-bar" />
+                    <span>Dashboard</span></b-dropdown-item
+                  >
+                  <b-dropdown-item to="/favorite/director">
+                    <i class="fas fa-bookmark" />
+                    <span>Favorite</span></b-dropdown-item
+                  >
+                  <b-dropdown-item to="/changelog">
+                    <i class="fas fa-info-circle" />
+                    <span>Change log</span></b-dropdown-item
+                  >
+                  <b-dropdown-item href="#" @click="openModal">
+                    <i class="fas fa-sign-out-alt" />
+                    <span>Logout</span>
+                  </b-dropdown-item>
+                </b-nav-item-dropdown>
+              </b-navbar-nav>
+            </b-collapse>
+          </b-navbar>
+
+          <b-modal id="modal-exit" title="LOGOUT" hide-footer>
+            <template #modal-header>
+              <span class="modal-header-text"
+                ><i class="fas fa-sign-out-alt" /> LOGOUT</span
+              >
+              <span class="close-icon" @click="toggleModal"
+                ><i class="fas fa-times" />
+              </span>
+            </template>
+            <template>
+              <div class="text-center">
+                <img
+                  src="../assets/exit.svg"
+                  width="200px"
+                  loading="lazy"
+                  alt=""
+                />
+              </div>
+              <div class="text-center text-alart-modal">
+                Are you sure you want to logout ?
+              </div>
+              <div class="btn-delete">
+                <b-button @click="logout" class="btn-confirm">LOGOUT</b-button>
+                <b-button @click="toggleModal" class="btn-cancle"
+                  >CANCLE</b-button
+                >
+              </div>
+            </template>
+          </b-modal>
+        </div>
+      </div>
     </div>
   </div>
 </template>

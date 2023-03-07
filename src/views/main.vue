@@ -1,7 +1,11 @@
 <template>
   <div id="main-view">
     <Navbar />
-    <router-view />
+    <div class="row justify-content-center" >
+      <div class="col-12 col-xl-11">
+      <router-view />
+      </div>
+    </div>
   </div>
 </template>
 

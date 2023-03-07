@@ -6,7 +6,7 @@
       @filterData="filterData"
     />
 
-    <div v-if="loading">
+    <div v-if="loading" class="loading">
       <LoadingData />
     </div>
     <div v-if="!loading">

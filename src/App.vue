@@ -1,9 +1,7 @@
 <template>
-  <perfect-scrollbar>
     <div id="app">
       <router-view />
     </div>
-  </perfect-scrollbar>
 </template>
 
 <script>
