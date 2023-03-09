@@ -2,6 +2,10 @@ body {
   height: 100vh;
   background-color: #fafafa;
 }
+.desktop-breakpoint{
+  max-width: 1850px;
+  margin: auto;
+}
 .Vue-Toastification__toast-body {
   font-family: "Sansation";
 }

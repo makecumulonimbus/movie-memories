@@ -13,6 +13,7 @@
           <div>- ลบเวลาออกจากวันที่ หน้า modal detail</div>
           <div>- ปรับ UI form add/edit</div>
           <div>- ปรับ สี background</div>
+          <div>- ปรับ screen breakpoint</div>
         </div>
         <div class="log-ver mt-4 mb-4">
           <h4 class="">Version 2.0.1</h4>
